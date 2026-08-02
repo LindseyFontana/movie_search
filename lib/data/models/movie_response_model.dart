@@ -7,11 +7,13 @@ class MovieResponseModel extends Movie {
     required super.posterPath,
   });
 
+  static const _baseURL = "https://image.tmdb.org/t/p/w92";
+
   factory MovieResponseModel.fromJson(Map<String, dynamic> json) =>
       MovieResponseModel(
         title: json["title"],
         overview: json["overview"],
-        posterPath: json["poster_path"],
+        posterPath: _baseURL + json["poster_path"],
       );
 
   Map<String, dynamic> toJson(Movie movie) => {
