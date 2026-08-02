@@ -7,7 +7,11 @@
         {
             "name": "movie_search",
             "request": "launch",
-            "type": "dart"
+            "type": "dart",
+            "toolArgs": [
+                "--dart-define-from-file",
+                ".env.json"
+            ]
         },
         {
             "name": "movie_search (profile mode)",

@@ -8,9 +8,12 @@ environment:
 
 dependencies:
   dio: ^5.11.0
+  either_dart: ^1.0.0
   equatable: ^2.1.0
   flutter:
     sdk: flutter
+  flutter_bloc: ^9.1.1
+  get_it: ^9.2.1
 
 dev_dependencies:
   flutter_test:
