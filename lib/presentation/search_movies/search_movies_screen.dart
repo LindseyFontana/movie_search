@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:movie_search/main.dart';
 import 'package:movie_search/presentation/search_movies/bloc/search_movies_bloc.dart';
+import 'package:movie_search/presentation/search_movies/endless_scrolling_widget.dart';
 
 class SearchMoviesScreen extends StatefulWidget {
   const SearchMoviesScreen({super.key});
@@ -35,7 +36,9 @@ class _SearchMoviesState extends State<SearchMoviesScreen> {
         child: BlocBuilder<SearchMoviesBloc, SearchMoviesState>(
           bloc: bloc,
           builder: (context, state) {
-            if (state is SuccessState) {
+            final trendingMovies = state.trendingMovies;
+
+            if (state is SuccessState || state is LoadingMoreMoviesState) {
               return Padding(
                 padding: EdgeInsets.all(16),
                 child: Column(
@@ -52,18 +55,10 @@ class _SearchMoviesState extends State<SearchMoviesScreen> {
                       ),
                     ),
                     SizedBox(height: 32),
-                    Expanded(
-                      child: ListView.separated(
-                        physics: ClampingScrollPhysics(),
-                        itemCount: state.trendingMovies.movies.length,
-                        itemBuilder: (BuildContext context, int index) {
-                          return Text(state.trendingMovies.movies[index].title);
-                        },
-                        separatorBuilder: (BuildContext context, int index) =>
-                            const Divider(),
-                      ),
-                    ),
-                    SizedBox(height: 32),
+                    EndlessScrolling(trendingMovies: trendingMovies!),
+                    if (state is LoadingMoreMoviesState)
+                      CircularProgressIndicator(),
+                    SizedBox(height: 50),
                   ],
                 ),
               );

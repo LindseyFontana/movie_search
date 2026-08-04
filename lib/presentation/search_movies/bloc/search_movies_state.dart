@@ -1,17 +1,23 @@
 part of 'search_movies_bloc.dart';
 
 sealed class SearchMoviesState {
-  const SearchMoviesState();
+  final TrendingMovies? trendingMovies;
+
+  SearchMoviesState({this.trendingMovies});
 }
 
 final class InitialState extends SearchMoviesState {}
 
-final class LoadingState extends SearchMoviesState {}
+final class LoadingState extends SearchMoviesState {
+  LoadingState();
+}
+
+final class LoadingMoreMoviesState extends SearchMoviesState {
+  LoadingMoreMoviesState({super.trendingMovies});
+}
 
 final class SuccessState extends SearchMoviesState {
-  final TrendingMovies trendingMovies;
-
-  const SuccessState(this.trendingMovies);
+  SuccessState({super.trendingMovies});
 }
 
 final class ErrorState extends SearchMoviesState {}

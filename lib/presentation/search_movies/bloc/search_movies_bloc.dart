@@ -12,12 +12,40 @@ class SearchMoviesBloc extends Bloc<MoviesEvent, SearchMoviesState> {
     on<GetTrendingMoviesEvent>((event, emit) async {
       emit(LoadingState());
 
-      final result = await usecase.call(null);
+      final result = await usecase.call(1);
 
       result.fold(
         (error) => emit(ErrorState()),
-        (movies) => emit(SuccessState(movies)),
+        (trendingMovies) => emit(SuccessState(trendingMovies: trendingMovies)),
       );
+    });
+
+    on<LoadMoreTrendingMoviesEvent>((event, emit) async {
+      emit(LoadingMoreMoviesState(trendingMovies: event.trendingMovies));
+
+      final trendingMoviesOld = event.trendingMovies;
+
+      final pageToSearch = trendingMoviesOld?.page != null
+          ? trendingMoviesOld!.page + 1
+          : 1;
+
+      final result = await usecase.call(pageToSearch);
+
+      result.fold((error) => emit(ErrorState()), (trendingMoviesNew) {
+        final movies = trendingMoviesOld != null
+            ? [...trendingMoviesOld.movies, ...trendingMoviesNew.movies]
+            : trendingMoviesNew.movies;
+
+        emit(
+          SuccessState(
+            trendingMovies: TrendingMovies(
+              page: trendingMoviesNew.page,
+              movies: movies,
+            ),
+          ),
+        );
+        return;
+      });
     });
   }
 }
