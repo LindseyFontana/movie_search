@@ -7,6 +7,7 @@ environment:
   sdk: ^3.12.2
 
 dependencies:
+  bloc_concurrency: ^0.3.0
   dio: ^5.11.0
   either_dart: ^1.0.0
   equatable: ^2.1.0

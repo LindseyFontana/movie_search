@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:movie_search/main.dart';
 import 'package:movie_search/presentation/search_movies/bloc/search_movies_bloc.dart';
-import 'package:movie_search/presentation/search_movies/endless_scrolling_widget.dart';
+import 'package:movie_search/presentation/search_movies/widgets/endless_scrolling_widget.dart';
 
 class SearchMoviesScreen extends StatefulWidget {
   const SearchMoviesScreen({super.key});
@@ -54,11 +54,12 @@ class _SearchMoviesState extends State<SearchMoviesScreen> {
                         ),
                       ),
                     ),
-                    SizedBox(height: 32),
-                    EndlessScrolling(trendingMovies: trendingMovies!),
+
+                    if (trendingMovies != null &&
+                        trendingMovies.movies.isNotEmpty)
+                      EndlessScrolling(trendingMovies: trendingMovies),
                     if (state is LoadingMoreMoviesState)
                       CircularProgressIndicator(),
-                    SizedBox(height: 50),
                   ],
                 ),
               );

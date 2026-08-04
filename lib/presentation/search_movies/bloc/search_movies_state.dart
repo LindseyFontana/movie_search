@@ -20,4 +20,8 @@ final class SuccessState extends SearchMoviesState {
   SuccessState({super.trendingMovies});
 }
 
-final class ErrorState extends SearchMoviesState {}
+final class ErrorState extends SearchMoviesState {
+  ErrorState({this.statusCode, this.message});
+  final int? statusCode;
+  final String? message;
+}

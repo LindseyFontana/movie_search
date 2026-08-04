@@ -11,7 +11,10 @@ class TrendingMoviesModel extends TrendingMovies {
         )
         .toList();
 
-    return TrendingMoviesModel(movies: movies, page: json["page"]);
+    return TrendingMoviesModel(
+      movies: movies.toSet().toList(),
+      page: json["page"],
+    );
   }
 
   Map<String, dynamic> toJson(TrendingMovies trendingMovies) => {
