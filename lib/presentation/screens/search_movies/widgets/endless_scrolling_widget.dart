@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:movie_search/domain/entities/trending_movies.dart';
 import 'package:movie_search/main.dart';
-import 'package:movie_search/presentation/search_movies/bloc/search_movies_bloc.dart';
+import 'package:movie_search/presentation/screens/search_movies/bloc/search_movies_bloc.dart';
 
 class EndlessScrolling extends StatefulWidget {
   const EndlessScrolling({super.key, required this.trendingMovies});
@@ -84,7 +84,7 @@ class MoviePoster extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      decoration: const BoxDecoration(color: Colors.black),
+      decoration: const BoxDecoration(color: Color.fromARGB(255, 59, 58, 58)),
       child: Image.network(
         url,
         fit: BoxFit.cover,

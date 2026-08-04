@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:movie_search/main.dart';
-import 'package:movie_search/presentation/search_movies/bloc/search_movies_bloc.dart';
-import 'package:movie_search/presentation/search_movies/widgets/endless_scrolling_widget.dart';
+import 'package:movie_search/presentation/screens/search_movies/bloc/search_movies_bloc.dart';
+import 'package:movie_search/presentation/screens/search_movies/widgets/endless_scrolling_widget.dart';
 
 class SearchMoviesScreen extends StatefulWidget {
   const SearchMoviesScreen({super.key});
@@ -30,10 +30,10 @@ class _SearchMoviesState extends State<SearchMoviesScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: Center(child: Text('Filmes'))),
-      body: SafeArea(
-        child: BlocBuilder<SearchMoviesBloc, SearchMoviesState>(
+    return SafeArea(
+      child: Scaffold(
+        appBar: AppBar(title: Center(child: Text('Filmes'))),
+        body: BlocBuilder<SearchMoviesBloc, SearchMoviesState>(
           bloc: bloc,
           builder: (context, state) {
             final trendingMovies = state.trendingMovies;
@@ -54,6 +54,8 @@ class _SearchMoviesState extends State<SearchMoviesScreen> {
                         ),
                       ),
                     ),
+
+                    SizedBox(height: 32),
 
                     if (trendingMovies != null &&
                         trendingMovies.movies.isNotEmpty)
