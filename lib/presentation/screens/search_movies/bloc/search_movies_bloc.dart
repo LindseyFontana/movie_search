@@ -1,5 +1,6 @@
 import 'package:bloc_concurrency/bloc_concurrency.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:movie_search/domain/entities/movie.dart';
 import 'package:movie_search/domain/entities/search_params.dart';
 import 'package:movie_search/domain/entities/pagineted_movies.dart';
 import 'package:movie_search/domain/usecases/get_trending_movies_use_case.dart';
@@ -8,49 +9,40 @@ part 'search_movies_event.dart';
 part 'search_movies_state.dart';
 
 class SearchMoviesBloc extends Bloc<MoviesEvent, SearchMoviesState> {
-  final GetTrendingMoviesUseCase trendingMovies;
-  final SearchMoviesUseCase searchedMovies;
+  final GetTrendingMoviesUseCase getTrendingMovies;
+  final SearchMoviesUseCase searchMovies;
 
   static const _firstPage = 1;
 
-  SearchMoviesBloc(this.trendingMovies, this.searchedMovies)
+  SearchMoviesBloc(this.getTrendingMovies, this.searchMovies)
     : super(InitialState()) {
     on<GetTrendingMoviesEvent>((event, emit) async {
       emit(LoadingState());
 
-      final result = await trendingMovies.call(_firstPage);
+      final result = await getTrendingMovies.call(_firstPage);
 
-      result.fold(
-        (error) => emit(ErrorState()),
-        (trendingMovies) =>
-            emit(SuccessState(paginetedMovies: trendingMovies, query: null)),
-      );
+      result.fold((error) => emit(ErrorState()), (trendingMovies) {
+        emit(SuccessState(paginetedMovies: trendingMovies));
+        return;
+      });
     });
 
     on<LoadMoreTrendingMoviesEvent>((event, emit) async {
       emit(LoadingMoreMoviesState(paginetedMovies: event.trendingMovies));
 
-      final trendingMoviesOld = event.trendingMovies;
+      final currentPage = event.trendingMovies;
 
-      final pageToSearch = trendingMoviesOld?.page != null
-          ? trendingMoviesOld!.page + 1
-          : _firstPage;
+      final nextPageNumber = _getNextPage(currentPage);
 
-      final result = await trendingMovies.call(pageToSearch);
+      final result = await getTrendingMovies.call(nextPageNumber);
 
-      result.fold((error) => emit(ErrorState()), (trendingMoviesNew) {
-        final movies = trendingMoviesOld != null
-            ? [...trendingMoviesOld.movies, ...trendingMoviesNew.movies]
-            : trendingMoviesNew.movies;
-
+      result.fold((error) => emit(ErrorState()), (nextPage) {
         emit(
           SuccessState(
-            paginetedMovies: PaginetedMovies(
-              page: trendingMoviesNew.page,
-              totalPages: trendingMoviesNew.totalPages,
-              movies: movies,
+            paginetedMovies: _getPaginetedMovies(
+              currentPage: currentPage,
+              nextPage: nextPage,
             ),
-            query: null,
           ),
         );
         return;
@@ -60,15 +52,14 @@ class SearchMoviesBloc extends Bloc<MoviesEvent, SearchMoviesState> {
     on<SearchMoviesEvent>((event, emit) async {
       emit(LoadingState());
 
-      final result = await searchedMovies.call(
+      final result = await searchMovies.call(
         SearchParams(query: event.query, pageToSearch: _firstPage),
       );
 
       result.fold(
         (error) => emit(ErrorState()),
-        (searchedMovies) => emit(
-          SuccessState(paginetedMovies: searchedMovies, query: event.query),
-        ),
+        (nextPage) =>
+            emit(SuccessState(paginetedMovies: nextPage, query: event.query)),
       );
     });
 
@@ -80,27 +71,20 @@ class SearchMoviesBloc extends Bloc<MoviesEvent, SearchMoviesState> {
         ),
       );
 
-      final searchedMoviesOld = event.paginetedMovies;
+      final currentPage = event.paginetedMovies;
 
-      final pageToSearch = searchedMoviesOld?.page != null
-          ? searchedMoviesOld!.page + 1
-          : _firstPage;
+      final nextPageNumber = _getNextPage(currentPage);
 
-      final result = await searchedMovies.call(
-        SearchParams(query: event.query, pageToSearch: pageToSearch),
+      final result = await searchMovies.call(
+        SearchParams(query: event.query, pageToSearch: nextPageNumber),
       );
 
-      result.fold((error) => emit(ErrorState()), (seachedMoviesNew) {
-        final movies = searchedMoviesOld != null
-            ? [...searchedMoviesOld.movies, ...seachedMoviesNew.movies]
-            : seachedMoviesNew.movies;
-
+      result.fold((error) => emit(ErrorState()), (nextPage) {
         emit(
           SuccessState(
-            paginetedMovies: PaginetedMovies(
-              page: seachedMoviesNew.page,
-              totalPages: seachedMoviesNew.totalPages,
-              movies: movies,
+            paginetedMovies: _getPaginetedMovies(
+              currentPage: currentPage,
+              nextPage: nextPage,
             ),
             query: event.query,
           ),
@@ -108,5 +92,29 @@ class SearchMoviesBloc extends Bloc<MoviesEvent, SearchMoviesState> {
         return;
       });
     }, transformer: droppable());
+  }
+
+  PaginetedMovies _getPaginetedMovies({
+    PaginetedMovies? currentPage,
+    required PaginetedMovies nextPage,
+  }) {
+    return PaginetedMovies(
+      page: nextPage.page,
+      totalPages: nextPage.totalPages,
+      movies: _appendMovies(currentPage: currentPage, nextPage: nextPage),
+    );
+  }
+
+  List<Movie> _appendMovies({
+    PaginetedMovies? currentPage,
+    required PaginetedMovies nextPage,
+  }) {
+    return currentPage != null
+        ? [...currentPage.movies, ...nextPage.movies]
+        : nextPage.movies;
+  }
+
+  int _getNextPage(PaginetedMovies? currentPage) {
+    return currentPage?.page != null ? currentPage!.page + 1 : _firstPage;
   }
 }
