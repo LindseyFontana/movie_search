@@ -59,7 +59,7 @@ class _SearchMoviesState extends State<SearchMoviesScreen> {
 
                     if (trendingMovies != null &&
                         trendingMovies.movies.isNotEmpty)
-                      EndlessScrolling(trendingMovies: trendingMovies),
+                      EndlessScrolling(paginatedMovies: trendingMovies),
                     if (state is LoadingMoreMoviesState)
                       CircularProgressIndicator(),
                   ],

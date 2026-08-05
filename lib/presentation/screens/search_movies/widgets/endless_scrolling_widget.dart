@@ -4,9 +4,9 @@ import 'package:movie_search/main.dart';
 import 'package:movie_search/presentation/screens/search_movies/bloc/search_movies_bloc.dart';
 
 class EndlessScrolling extends StatefulWidget {
-  const EndlessScrolling({super.key, required this.trendingMovies});
+  const EndlessScrolling({super.key, required this.paginatedMovies});
 
-  final PaginetedMovies trendingMovies;
+  final PaginetedMovies paginatedMovies;
 
   @override
   State<StatefulWidget> createState() => _EndlessScrollingState();
@@ -42,7 +42,7 @@ class _EndlessScrollingState extends State<EndlessScrolling> {
 
   @override
   Widget build(BuildContext context) {
-    final movies = widget.trendingMovies.movies;
+    final movies = widget.paginatedMovies.movies;
 
     return Expanded(
       child: GridView.builder(
@@ -57,7 +57,7 @@ class _EndlessScrollingState extends State<EndlessScrolling> {
               // if (wasSynchronouslyLoaded) return child;
               if (frame != null) return child;
 
-              return MoviePoster(
+              return _MoviePoster(
                 title: movies[index].title,
                 url: movies[index].posterPath,
               );
@@ -75,8 +75,8 @@ class _EndlessScrollingState extends State<EndlessScrolling> {
   }
 }
 
-class MoviePoster extends StatelessWidget {
-  const MoviePoster({super.key, required this.title, required this.url});
+class _MoviePoster extends StatelessWidget {
+  const _MoviePoster({required this.title, required this.url});
 
   final String url;
   final String title;

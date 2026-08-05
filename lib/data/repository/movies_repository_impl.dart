@@ -10,4 +10,10 @@ class MoviesRepositoryImpl implements MoviesRepository {
   @override
   Future<PaginetedMovies> getTrendingMovies(int pageToSearch) =>
       _datasource.getTrendingMovies(pageToSearch);
+
+  @override
+  Future<PaginetedMovies> searchMovies({
+    required String query,
+    required int pageToSearch,
+  }) => _datasource.searchMovies(query, pageToSearch);
 }
