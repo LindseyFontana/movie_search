@@ -2,8 +2,9 @@ part of 'search_movies_bloc.dart';
 
 sealed class SearchMoviesState {
   final PaginetedMovies? paginetedMovies;
+  final String? query;
 
-  SearchMoviesState({this.paginetedMovies});
+  SearchMoviesState({this.paginetedMovies, this.query});
 }
 
 final class InitialState extends SearchMoviesState {}
@@ -13,11 +14,11 @@ final class LoadingState extends SearchMoviesState {
 }
 
 final class LoadingMoreMoviesState extends SearchMoviesState {
-  LoadingMoreMoviesState({super.paginetedMovies});
+  LoadingMoreMoviesState({super.paginetedMovies, super.query});
 }
 
 final class SuccessState extends SearchMoviesState {
-  SuccessState({super.paginetedMovies});
+  SuccessState({super.paginetedMovies, super.query});
 }
 
 final class ErrorState extends SearchMoviesState {

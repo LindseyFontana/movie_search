@@ -22,7 +22,8 @@ class SearchMoviesBloc extends Bloc<MoviesEvent, SearchMoviesState> {
 
       result.fold(
         (error) => emit(ErrorState()),
-        (trendingMovies) => emit(SuccessState(paginetedMovies: trendingMovies)),
+        (trendingMovies) =>
+            emit(SuccessState(paginetedMovies: trendingMovies, query: null)),
       );
     });
 
@@ -48,6 +49,7 @@ class SearchMoviesBloc extends Bloc<MoviesEvent, SearchMoviesState> {
               page: trendingMoviesNew.page,
               movies: movies,
             ),
+            query: null,
           ),
         );
         return;
@@ -63,8 +65,46 @@ class SearchMoviesBloc extends Bloc<MoviesEvent, SearchMoviesState> {
 
       result.fold(
         (error) => emit(ErrorState()),
-        (searchedMovies) => emit(SuccessState(paginetedMovies: searchedMovies)),
+        (searchedMovies) => emit(
+          SuccessState(paginetedMovies: searchedMovies, query: event.query),
+        ),
       );
     });
+
+    on<SearchMoreMoviesEvent>((event, emit) async {
+      emit(
+        LoadingMoreMoviesState(
+          paginetedMovies: event.paginetedMovies,
+          query: event.query,
+        ),
+      );
+
+      final searchedMoviesOld = event.paginetedMovies;
+
+      final pageToSearch = searchedMoviesOld?.page != null
+          ? searchedMoviesOld!.page + 1
+          : _firstPage;
+
+      final result = await searchedMovies.call(
+        SearchParams(query: event.query, pageToSearch: pageToSearch),
+      );
+
+      result.fold((error) => emit(ErrorState()), (seachedMoviesNew) {
+        final movies = searchedMoviesOld != null
+            ? [...searchedMoviesOld.movies, ...seachedMoviesNew.movies]
+            : seachedMoviesNew.movies;
+
+        emit(
+          SuccessState(
+            paginetedMovies: PaginetedMovies(
+              page: seachedMoviesNew.page,
+              movies: movies,
+            ),
+            query: event.query,
+          ),
+        );
+        return;
+      });
+    }, transformer: droppable());
   }
 }

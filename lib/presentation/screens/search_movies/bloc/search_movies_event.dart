@@ -8,10 +8,15 @@ final class SearchMoviesEvent extends MoviesEvent {
   SearchMoviesEvent(this.query);
 }
 
-final class GetTrendingMoviesEvent extends MoviesEvent {
-  final PaginetedMovies? trendingMovies;
+final class SearchMoreMoviesEvent extends MoviesEvent {
+  final PaginetedMovies? paginetedMovies;
+  final String query;
 
-  GetTrendingMoviesEvent([this.trendingMovies]);
+  SearchMoreMoviesEvent(this.query, this.paginetedMovies);
+}
+
+final class GetTrendingMoviesEvent extends MoviesEvent {
+  GetTrendingMoviesEvent();
 }
 
 final class LoadMoreTrendingMoviesEvent extends MoviesEvent {

@@ -32,10 +32,22 @@ class _EndlessScrollingState extends State<EndlessScrolling> {
     if (_scrollControler.position.pixels >=
         (_scrollControler.position.maxScrollExtent -
             (_scrollControler.position.pixels / 1.5))) {
-      final trendingMovies = bloc.state.paginetedMovies;
+      final paginetedMovies = bloc.state.paginetedMovies;
 
-      if (trendingMovies != null && trendingMovies.page < 5) {
-        bloc.add(LoadMoreTrendingMoviesEvent(bloc.state.paginetedMovies));
+      final isSearchingMovies =
+          bloc.state.query != null && bloc.state.query!.isNotEmpty;
+
+      if (paginetedMovies != null && paginetedMovies.page < 5) {
+        if (isSearchingMovies) {
+          bloc.add(
+            SearchMoreMoviesEvent(
+              bloc.state.query!,
+              bloc.state.paginetedMovies,
+            ),
+          );
+        } else {
+          bloc.add(LoadMoreTrendingMoviesEvent(bloc.state.paginetedMovies));
+        }
       }
     }
   }
