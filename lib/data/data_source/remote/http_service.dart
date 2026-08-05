@@ -27,7 +27,7 @@ class HttpService {
 
       throw httpError;
     } catch (error) {
-      final httpError = GenericError(
+      final httpError = HttpError(
         statusCode: 520,
         message: "Server Returned an Unknown Error",
       );

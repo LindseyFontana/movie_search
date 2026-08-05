@@ -19,15 +19,3 @@ class MissingResponseError implements Exception {
     return "Error message: $message";
   }
 }
-
-class GenericError implements Exception {
-  const GenericError({this.stackTrace, this.statusCode, this.message});
-  final StackTrace? stackTrace;
-  final String? message;
-  final int? statusCode;
-
-  @override
-  String toString() {
-    return "Error message: $message, \n stackTrace: $stackTrace";
-  }
-}

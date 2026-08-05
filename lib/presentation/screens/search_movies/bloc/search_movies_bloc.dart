@@ -21,7 +21,9 @@ class SearchMoviesBloc extends Bloc<MoviesEvent, SearchMoviesState> {
 
       final result = await getTrendingMovies.call(_firstPage);
 
-      result.fold((error) => emit(ErrorState()), (trendingMovies) {
+      result.fold((error) => emit(ErrorState(message: error.message)), (
+        trendingMovies,
+      ) {
         emit(SuccessState(paginetedMovies: trendingMovies));
         return;
       });
@@ -36,7 +38,9 @@ class SearchMoviesBloc extends Bloc<MoviesEvent, SearchMoviesState> {
 
       final result = await getTrendingMovies.call(nextPageNumber);
 
-      result.fold((error) => emit(ErrorState()), (nextPage) {
+      result.fold((error) => emit(ErrorState(message: error.message)), (
+        nextPage,
+      ) {
         emit(
           SuccessState(
             paginetedMovies: _getPaginetedMovies(
@@ -57,7 +61,7 @@ class SearchMoviesBloc extends Bloc<MoviesEvent, SearchMoviesState> {
       );
 
       result.fold(
-        (error) => emit(ErrorState()),
+        (error) => emit(ErrorState(message: error.message)),
         (nextPage) =>
             emit(SuccessState(paginetedMovies: nextPage, query: event.query)),
       );
@@ -79,7 +83,9 @@ class SearchMoviesBloc extends Bloc<MoviesEvent, SearchMoviesState> {
         SearchParams(query: event.query, pageToSearch: nextPageNumber),
       );
 
-      result.fold((error) => emit(ErrorState()), (nextPage) {
+      result.fold((error) => emit(ErrorState(message: error.message)), (
+        nextPage,
+      ) {
         emit(
           SuccessState(
             paginetedMovies: _getPaginetedMovies(
