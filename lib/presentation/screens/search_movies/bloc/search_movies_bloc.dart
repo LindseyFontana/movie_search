@@ -40,7 +40,7 @@ class SearchMoviesBloc extends Bloc<MoviesEvent, SearchMoviesState> {
 
         emit(
           SuccessState(
-            trendingMovies: TrendingMovies(
+            trendingMovies: PaginetedMovies(
               page: trendingMoviesNew.page,
               movies: movies,
             ),

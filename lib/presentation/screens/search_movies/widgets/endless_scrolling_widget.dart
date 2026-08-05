@@ -6,7 +6,7 @@ import 'package:movie_search/presentation/screens/search_movies/bloc/search_movi
 class EndlessScrolling extends StatefulWidget {
   const EndlessScrolling({super.key, required this.trendingMovies});
 
-  final TrendingMovies trendingMovies;
+  final PaginetedMovies trendingMovies;
 
   @override
   State<StatefulWidget> createState() => _EndlessScrollingState();

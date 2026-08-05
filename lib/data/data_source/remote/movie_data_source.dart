@@ -1,10 +1,10 @@
 import 'package:dio/dio.dart';
 import 'package:movie_search/data/data_source/remote/http_service.dart';
-import 'package:movie_search/data/models/trending_movies_model.dart';
+import 'package:movie_search/data/models/paginated_movies_response_model.dart';
 import 'package:movie_search/domain/entities/trending_movies.dart';
 
 abstract class MovieDataSource {
-  Future<TrendingMovies> getTrendingMovies(int pageToSearch);
+  Future<PaginetedMovies> getTrendingMovies(int pageToSearch);
 }
 
 class MovieDataSourceImpl implements MovieDataSource {
@@ -15,7 +15,7 @@ class MovieDataSourceImpl implements MovieDataSource {
   static const _baseURL = "https://api.themoviedb.org/3";
 
   @override
-  Future<TrendingMovies> getTrendingMovies(int pageToSearch) async {
+  Future<PaginetedMovies> getTrendingMovies(int pageToSearch) async {
     const token = String.fromEnvironment("MOVIE_API_KEY");
 
     final response = await httpService.request(
@@ -31,6 +31,6 @@ class MovieDataSourceImpl implements MovieDataSource {
 
     final json = response.data as Map<String, dynamic>;
 
-    return TrendingMoviesModel.fromJson(json);
+    return PaginetedMoviesResponseModel.fromJson(json);
   }
 }

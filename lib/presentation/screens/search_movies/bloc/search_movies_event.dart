@@ -5,13 +5,13 @@ sealed class MoviesEvent {}
 final class SearchMoviesEvent extends MoviesEvent {}
 
 final class GetTrendingMoviesEvent extends MoviesEvent {
-  final TrendingMovies? trendingMovies;
+  final PaginetedMovies? trendingMovies;
 
   GetTrendingMoviesEvent([this.trendingMovies]);
 }
 
 final class LoadMoreTrendingMoviesEvent extends MoviesEvent {
-  final TrendingMovies? trendingMovies;
+  final PaginetedMovies? trendingMovies;
 
   LoadMoreTrendingMoviesEvent([this.trendingMovies]);
 }

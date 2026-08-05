@@ -1,7 +1,7 @@
 part of 'search_movies_bloc.dart';
 
 sealed class SearchMoviesState {
-  final TrendingMovies? trendingMovies;
+  final PaginetedMovies? trendingMovies;
 
   SearchMoviesState({this.trendingMovies});
 }
