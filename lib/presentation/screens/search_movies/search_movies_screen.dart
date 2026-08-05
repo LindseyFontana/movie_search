@@ -36,7 +36,7 @@ class _SearchMoviesState extends State<SearchMoviesScreen> {
         body: BlocBuilder<SearchMoviesBloc, SearchMoviesState>(
           bloc: bloc,
           builder: (context, state) {
-            final trendingMovies = state.trendingMovies;
+            final paginetedMovies = state.paginetedMovies;
 
             if (state is SuccessState || state is LoadingMoreMoviesState) {
               return Padding(
@@ -59,9 +59,9 @@ class _SearchMoviesState extends State<SearchMoviesScreen> {
 
                     SizedBox(height: 32),
 
-                    if (trendingMovies != null &&
-                        trendingMovies.movies.isNotEmpty)
-                      EndlessScrolling(paginatedMovies: trendingMovies),
+                    if (paginetedMovies != null &&
+                        paginetedMovies.movies.isNotEmpty)
+                      EndlessScrolling(paginatedMovies: paginetedMovies),
                     if (state is LoadingMoreMoviesState)
                       CircularProgressIndicator(),
                   ],

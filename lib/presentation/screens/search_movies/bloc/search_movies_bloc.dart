@@ -22,12 +22,12 @@ class SearchMoviesBloc extends Bloc<MoviesEvent, SearchMoviesState> {
 
       result.fold(
         (error) => emit(ErrorState()),
-        (trendingMovies) => emit(SuccessState(trendingMovies: trendingMovies)),
+        (trendingMovies) => emit(SuccessState(paginetedMovies: trendingMovies)),
       );
     });
 
     on<LoadMoreTrendingMoviesEvent>((event, emit) async {
-      emit(LoadingMoreMoviesState(trendingMovies: event.trendingMovies));
+      emit(LoadingMoreMoviesState(paginetedMovies: event.trendingMovies));
 
       final trendingMoviesOld = event.trendingMovies;
 
@@ -44,7 +44,7 @@ class SearchMoviesBloc extends Bloc<MoviesEvent, SearchMoviesState> {
 
         emit(
           SuccessState(
-            trendingMovies: PaginetedMovies(
+            paginetedMovies: PaginetedMovies(
               page: trendingMoviesNew.page,
               movies: movies,
             ),
@@ -63,7 +63,7 @@ class SearchMoviesBloc extends Bloc<MoviesEvent, SearchMoviesState> {
 
       result.fold(
         (error) => emit(ErrorState()),
-        (trendingMovies) => emit(SuccessState(trendingMovies: trendingMovies)),
+        (searchedMovies) => emit(SuccessState(paginetedMovies: searchedMovies)),
       );
     });
   }

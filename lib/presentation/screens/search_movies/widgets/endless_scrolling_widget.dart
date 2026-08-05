@@ -32,10 +32,10 @@ class _EndlessScrollingState extends State<EndlessScrolling> {
     if (_scrollControler.position.pixels >=
         (_scrollControler.position.maxScrollExtent -
             (_scrollControler.position.pixels / 1.5))) {
-      final trendingMovies = bloc.state.trendingMovies;
+      final trendingMovies = bloc.state.paginetedMovies;
 
       if (trendingMovies != null && trendingMovies.page < 5) {
-        bloc.add(LoadMoreTrendingMoviesEvent(bloc.state.trendingMovies));
+        bloc.add(LoadMoreTrendingMoviesEvent(bloc.state.paginetedMovies));
       }
     }
   }
