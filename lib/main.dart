@@ -4,6 +4,7 @@ import 'package:movie_search/core/theme.dart';
 import 'package:movie_search/data/data_source/remote/http_service.dart';
 import 'package:movie_search/data/data_source/remote/movie_data_source.dart';
 import 'package:movie_search/data/repository/movies_repository_impl.dart';
+import 'package:movie_search/domain/usecases/search_movies_use_case.dart';
 import 'package:movie_search/presentation/screens/search_movies/bloc/search_movies_bloc.dart';
 import 'package:movie_search/presentation/screens/search_movies/search_movies_screen.dart';
 
@@ -26,8 +27,15 @@ void setupLocator() {
     () => GetTrendingMoviesUseCase(getIt<MoviesRepositoryImpl>()),
   );
 
+  getIt.registerFactory<SearchMoviesUseCase>(
+    () => SearchMoviesUseCase(getIt<MoviesRepositoryImpl>()),
+  );
+
   getIt.registerLazySingleton<SearchMoviesBloc>(
-    () => SearchMoviesBloc(getIt<GetTrendingMoviesUseCase>()),
+    () => SearchMoviesBloc(
+      getIt<GetTrendingMoviesUseCase>(),
+      getIt<SearchMoviesUseCase>(),
+    ),
   );
 }
 

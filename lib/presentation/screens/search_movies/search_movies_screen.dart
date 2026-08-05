@@ -53,6 +53,8 @@ class _SearchMoviesState extends State<SearchMoviesScreen> {
                           borderRadius: BorderRadius.circular(8),
                         ),
                       ),
+                      onSubmitted: (query) =>
+                          bloc.add(SearchMoviesEvent(query)),
                     ),
 
                     SizedBox(height: 32),

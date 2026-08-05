@@ -2,7 +2,11 @@ part of 'search_movies_bloc.dart';
 
 sealed class MoviesEvent {}
 
-final class SearchMoviesEvent extends MoviesEvent {}
+final class SearchMoviesEvent extends MoviesEvent {
+  final String query;
+
+  SearchMoviesEvent(this.query);
+}
 
 final class GetTrendingMoviesEvent extends MoviesEvent {
   final PaginetedMovies? trendingMovies;

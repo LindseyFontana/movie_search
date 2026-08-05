@@ -12,16 +12,22 @@ abstract class MovieDataSource {
 class MovieDataSourceImpl implements MovieDataSource {
   final HttpService httpService;
 
-  MovieDataSourceImpl(this.httpService);
+  const MovieDataSourceImpl(this.httpService);
 
   static const _baseURL = "https://api.themoviedb.org/3";
+
   static const _token = String.fromEnvironment("MOVIE_API_KEY");
+
+  static const _defaultParameters = {
+    "language": "pt-BR",
+    "include_adult": false,
+  };
 
   @override
   Future<PaginetedMovies> getTrendingMovies(int pageToSearch) async {
     final response = await httpService.request(
       path: "$_baseURL/trending/movie/week",
-      queryParameters: {"language": "pt-BR", "page": pageToSearch},
+      queryParameters: {..._defaultParameters, "page": pageToSearch},
       options: Options(
         headers: {
           "accept": "application/json",
@@ -38,8 +44,12 @@ class MovieDataSourceImpl implements MovieDataSource {
   @override
   Future<PaginetedMovies> searchMovies(String query, int pageToSearch) async {
     final response = await httpService.request(
-      path: "$_baseURL/trending/movie/week",
-      queryParameters: {"language": "pt-BR", "page": pageToSearch},
+      path: "$_baseURL/search/movie",
+      queryParameters: {
+        ..._defaultParameters,
+        "page": pageToSearch,
+        "query": query,
+      },
       options: Options(
         headers: {
           "accept": "application/json",
