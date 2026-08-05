@@ -6,23 +6,31 @@ class UseCase<T, Params> {
 
   const UseCase({required this.request});
 
-  Future<Either<HttpError, T>> call(Params params) => _onRequest(params);
+  Future<Either<Failure, T>> call(Params params) => _onRequest(params);
 
-  Future<Either<HttpError, T>> _onRequest(Params param) async {
+  Future<Either<Failure, T>> _onRequest(Params param) async {
     try {
       final response = await request.call(param);
 
       if (response != null) {
         return Right(response);
       }
-      //TODO: Validar se esse erro é levantado ou se ŕ retornado no either,
-      //pois como ele não é do tipo HttpError pode causar algum problema
-      throw MissingResponseError(message: 'Response is a null value');
-    } on HttpError catch (error) {
+
+      return Left(
+        MissingResponseError(
+          message: 'Response is a null value',
+          type: ErrorType.unknow,
+        ),
+      );
+    } on Failure catch (error) {
       return Left(error);
     } catch (error, stackTrace) {
       return Left(
-        HttpError(message: "Erro desconhecido", stackTrace: stackTrace),
+        GenericError(
+          message: "Unkow error",
+          stackTrace: stackTrace,
+          type: ErrorType.unknow,
+        ),
       );
     }
   }

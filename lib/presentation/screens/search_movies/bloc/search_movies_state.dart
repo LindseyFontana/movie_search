@@ -22,7 +22,7 @@ final class SuccessState extends SearchMoviesState {
 }
 
 final class ErrorState extends SearchMoviesState {
-  final String? message;
+  final Failure error;
 
-  ErrorState({this.message});
+  ErrorState(this.error);
 }

@@ -1,5 +1,6 @@
 import 'package:bloc_concurrency/bloc_concurrency.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:movie_search/core/errors.dart';
 import 'package:movie_search/domain/entities/movie.dart';
 import 'package:movie_search/domain/entities/search_params.dart';
 import 'package:movie_search/domain/entities/pagineted_movies.dart';
@@ -21,9 +22,7 @@ class SearchMoviesBloc extends Bloc<MoviesEvent, SearchMoviesState> {
 
       final result = await getTrendingMovies.call(_firstPage);
 
-      result.fold((error) => emit(ErrorState(message: error.message)), (
-        trendingMovies,
-      ) {
+      result.fold((error) => emit(ErrorState(error)), (trendingMovies) {
         emit(SuccessState(paginetedMovies: trendingMovies));
         return;
       });
@@ -38,9 +37,7 @@ class SearchMoviesBloc extends Bloc<MoviesEvent, SearchMoviesState> {
 
       final result = await getTrendingMovies.call(nextPageNumber);
 
-      result.fold((error) => emit(ErrorState(message: error.message)), (
-        nextPage,
-      ) {
+      result.fold((error) => emit(ErrorState(error)), (nextPage) {
         emit(
           SuccessState(
             paginetedMovies: _getPaginetedMovies(
@@ -61,7 +58,7 @@ class SearchMoviesBloc extends Bloc<MoviesEvent, SearchMoviesState> {
       );
 
       result.fold(
-        (error) => emit(ErrorState(message: error.message)),
+        (error) => emit(ErrorState(error)),
         (nextPage) =>
             emit(SuccessState(paginetedMovies: nextPage, query: event.query)),
       );
@@ -83,9 +80,7 @@ class SearchMoviesBloc extends Bloc<MoviesEvent, SearchMoviesState> {
         SearchParams(query: event.query, pageToSearch: nextPageNumber),
       );
 
-      result.fold((error) => emit(ErrorState(message: error.message)), (
-        nextPage,
-      ) {
+      result.fold((error) => emit(ErrorState(error)), (nextPage) {
         emit(
           SuccessState(
             paginetedMovies: _getPaginetedMovies(
