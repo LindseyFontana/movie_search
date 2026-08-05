@@ -12,7 +12,7 @@ class SearchMoviesScreen extends StatefulWidget {
 }
 
 class _SearchMoviesState extends State<SearchMoviesScreen> {
-  final TextEditingController _myController = TextEditingController();
+  final TextEditingController _inputTextController = TextEditingController();
 
   final bloc = getIt<SearchMoviesBloc>();
 
@@ -24,7 +24,7 @@ class _SearchMoviesState extends State<SearchMoviesScreen> {
 
   @override
   void dispose() {
-    _myController.dispose();
+    _inputTextController.dispose();
     super.dispose();
   }
 
@@ -44,11 +44,19 @@ class _SearchMoviesState extends State<SearchMoviesScreen> {
                 child: Column(
                   children: [
                     TextField(
-                      controller: _myController,
+                      controller: _inputTextController,
                       decoration: InputDecoration(
                         labelText: 'Pesquisar',
                         hintText: 'Digite o título do filme',
-                        suffixIcon: Icon(Icons.clear),
+                        suffixIcon: IconButton(
+                          icon: Icon(Icons.clear),
+                          onPressed: () {
+                            _inputTextController.text = "";
+                            //TODO: salvar a primeira página em cache, talvez atualizar
+                            //diariamente ou mensalmente para não perder a atualizadade da listagem
+                            bloc.add(GetTrendingMoviesEvent());
+                          },
+                        ),
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(8),
                         ),
