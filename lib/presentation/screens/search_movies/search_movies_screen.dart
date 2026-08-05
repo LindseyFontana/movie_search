@@ -31,40 +31,45 @@ class _SearchMoviesState extends State<SearchMoviesScreen> {
   @override
   Widget build(BuildContext context) {
     return SafeArea(
-      child: Scaffold(
-        appBar: AppBar(title: Center(child: Text('Filmes'))),
-        body: Padding(
-          padding: EdgeInsets.all(16),
-          child: Column(
-            children: [
-              TextField(
-                controller: _inputTextController,
-                decoration: InputDecoration(
-                  labelText: 'Pesquisar',
-                  hintText: 'Digite o título do filme',
-                  suffixIcon: IconButton(
-                    icon: Icon(Icons.clear),
-                    onPressed: () {
-                      _inputTextController.text = "";
-                      //TODO: salvar a primeira página em cache, talvez atualizar
-                      //diariamente ou mensalmente para não perder a atualizadade da listagem
-                      bloc.add(GetTrendingMoviesEvent());
-                    },
+      child: GestureDetector(
+        onTap: () => FocusScope.of(context).unfocus(),
+        child: Scaffold(
+          appBar: AppBar(title: Center(child: Text('Filmes'))),
+          body: Padding(
+            padding: EdgeInsets.all(16),
+            child: Column(
+              children: [
+                TextField(
+                  controller: _inputTextController,
+                  decoration: InputDecoration(
+                    labelText: 'Pesquisar',
+                    hintText: 'Digite o título do filme',
+                    suffixIcon: IconButton(
+                      icon: Icon(Icons.clear),
+                      onPressed: () {
+                        _inputTextController.text = "";
+                        //TODO: salvar a primeira página em cache, talvez atualizar
+                        //diariamente ou mensalmente para não perder a atualizadade da listagem
+                        bloc.add(GetTrendingMoviesEvent());
+                        FocusScope.of(context).unfocus();
+                      },
+                    ),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(8),
+                    ),
                   ),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(8),
-                  ),
+                  onSubmitted: (query) => bloc.add(SearchMoviesEvent(query)),
                 ),
-                onSubmitted: (query) => bloc.add(SearchMoviesEvent(query)),
-              ),
 
-              SizedBox(height: 32),
+                SizedBox(height: 32),
 
-              BlocBuilder<SearchMoviesBloc, SearchMoviesState>(
-                bloc: bloc,
-                builder: (context, state) => Expanded(child: _buildBody(state)),
-              ),
-            ],
+                BlocBuilder<SearchMoviesBloc, SearchMoviesState>(
+                  bloc: bloc,
+                  builder: (context, state) =>
+                      Expanded(child: _buildBody(state)),
+                ),
+              ],
+            ),
           ),
         ),
       ),
