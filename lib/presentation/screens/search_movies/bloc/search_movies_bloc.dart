@@ -47,6 +47,7 @@ class SearchMoviesBloc extends Bloc<MoviesEvent, SearchMoviesState> {
           SuccessState(
             paginetedMovies: PaginetedMovies(
               page: trendingMoviesNew.page,
+              totalPage: trendingMoviesNew.totalPage,
               movies: movies,
             ),
             query: null,
@@ -98,6 +99,7 @@ class SearchMoviesBloc extends Bloc<MoviesEvent, SearchMoviesState> {
           SuccessState(
             paginetedMovies: PaginetedMovies(
               page: seachedMoviesNew.page,
+              totalPage: seachedMoviesNew.totalPage,
               movies: movies,
             ),
             query: event.query,

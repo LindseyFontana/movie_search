@@ -3,10 +3,15 @@ import 'package:movie_search/domain/entities/movie.dart';
 
 class PaginetedMovies extends Equatable {
   final int page;
+  final int totalPage;
   final List<Movie> movies;
 
-  const PaginetedMovies({required this.page, required this.movies});
+  const PaginetedMovies({
+    required this.page,
+    required this.movies,
+    required this.totalPage,
+  });
 
   @override
-  List<Object?> get props => [page, movies];
+  List<Object?> get props => [page, movies, totalPage];
 }
