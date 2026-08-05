@@ -57,33 +57,38 @@ class _EndlessScrollingState extends State<EndlessScrolling> {
   Widget build(BuildContext context) {
     final movies = widget.paginatedMovies.movies;
 
-    return Expanded(
-      child: GridView.builder(
-        controller: _scrollControler,
-        physics: ClampingScrollPhysics(),
-        itemCount: movies.length,
-        itemBuilder: (BuildContext context, int index) {
-          return Image.network(
-            movies[index].posterPath,
-            frameBuilder: (context, child, frame, wasSynchronouslyLoaded) {
-              //TODO: habilitar quando salvar imagens em cache, irá recuperá-las
-              // if (wasSynchronouslyLoaded) return child;
-              if (frame != null) return child;
+    return Column(
+      children: [
+        Expanded(
+          child: GridView.builder(
+            controller: _scrollControler,
+            physics: ClampingScrollPhysics(),
+            itemCount: movies.length,
+            itemBuilder: (BuildContext context, int index) {
+              return Image.network(
+                movies[index].posterPath,
+                frameBuilder: (context, child, frame, wasSynchronouslyLoaded) {
+                  //TODO: habilitar quando salvar imagens em cache, irá recuperá-las
+                  // if (wasSynchronouslyLoaded) return child;
+                  if (frame != null) return child;
 
-              return _MoviePoster(
-                title: movies[index].title,
-                url: movies[index].posterPath,
+                  return _MoviePoster(
+                    title: movies[index].title,
+                    url: movies[index].posterPath,
+                  );
+                },
               );
             },
-          );
-        },
-        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: 3,
-          childAspectRatio: 0.67,
-          mainAxisSpacing: 1,
-          crossAxisSpacing: 1,
+            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 3,
+              childAspectRatio: 0.67,
+              mainAxisSpacing: 1,
+              crossAxisSpacing: 1,
+            ),
+          ),
         ),
-      ),
+        if (bloc.state is LoadingMoreMoviesState) CircularProgressIndicator(),
+      ],
     );
   }
 }

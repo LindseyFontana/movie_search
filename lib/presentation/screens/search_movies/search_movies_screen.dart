@@ -62,87 +62,30 @@ class _SearchMoviesState extends State<SearchMoviesScreen> {
 
               BlocBuilder<SearchMoviesBloc, SearchMoviesState>(
                 bloc: bloc,
-                builder: (context, state) {
-                  final paginetedMovies = state.paginetedMovies;
-
-                  if (state is SuccessState ||
-                      state is LoadingMoreMoviesState) {
-                    return Expanded(
-                      child: Column(
-                        children: [
-                          if (paginetedMovies != null &&
-                              paginetedMovies.movies.isNotEmpty)
-                            EndlessScrolling(paginatedMovies: paginetedMovies),
-                          if (state is LoadingMoreMoviesState)
-                            CircularProgressIndicator(),
-                        ],
-                      ),
-                    );
-                  }
-                  if (state is ErrorState) {
-                    return Center(child: Text("Error"));
-                  } else {
-                    return Expanded(
-                      child: Center(child: CircularProgressIndicator()),
-                    );
-                  }
-                },
+                builder: (context, state) => Expanded(child: _buildBody(state)),
               ),
             ],
           ),
         ),
-
-        // BlocBuilder<SearchMoviesBloc, SearchMoviesState>(
-        //   bloc: bloc,
-        //   builder: (context, state) {
-        //     final paginetedMovies = state.paginetedMovies;
-
-        //     if (state is SuccessState || state is LoadingMoreMoviesState) {
-        //       return Padding(
-        //         padding: EdgeInsets.all(16),
-        //         child: Column(
-        //           children: [
-        //             TextField(
-        //               controller: _inputTextController,
-        //               decoration: InputDecoration(
-        //                 labelText: 'Pesquisar',
-        //                 hintText: 'Digite o título do filme',
-        //                 suffixIcon: IconButton(
-        //                   icon: Icon(Icons.clear),
-        //                   onPressed: () {
-        //                     _inputTextController.text = "";
-        //                     //TODO: salvar a primeira página em cache, talvez atualizar
-        //                     //diariamente ou mensalmente para não perder a atualizadade da listagem
-        //                     bloc.add(GetTrendingMoviesEvent());
-        //                   },
-        //                 ),
-        //                 border: OutlineInputBorder(
-        //                   borderRadius: BorderRadius.circular(8),
-        //                 ),
-        //               ),
-        //               onSubmitted: (query) =>
-        //                   bloc.add(SearchMoviesEvent(query)),
-        //             ),
-
-        //             SizedBox(height: 32),
-
-        //             if (paginetedMovies != null &&
-        //                 paginetedMovies.movies.isNotEmpty)
-        //               EndlessScrolling(paginatedMovies: paginetedMovies),
-        //             if (state is LoadingMoreMoviesState)
-        //               CircularProgressIndicator(),
-        //           ],
-        //         ),
-        //       );
-        //     }
-        //     if (state is ErrorState) {
-        //       return Center(child: Text("Error"));
-        //     } else {
-        //       return Center(child: CircularProgressIndicator());
-        //     }
-        //   },
-        // ),
       ),
     );
+  }
+
+  Widget _buildBody(SearchMoviesState state) {
+    final paginetedMovies = state.paginetedMovies;
+
+    if (state is SuccessState || state is LoadingMoreMoviesState) {
+      return paginetedMovies != null && paginetedMovies.movies.isNotEmpty
+          ? EndlessScrolling(paginatedMovies: paginetedMovies)
+          : Padding(
+              padding: EdgeInsets.only(top: 32),
+              child: Text("Não há filmes"),
+            );
+    }
+    if (state is ErrorState) {
+      return Center(child: Text("Error"));
+    } else {
+      return Center(child: CircularProgressIndicator());
+    }
   }
 }
