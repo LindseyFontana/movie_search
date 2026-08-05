@@ -1,7 +1,7 @@
 import 'package:bloc_concurrency/bloc_concurrency.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:movie_search/domain/entities/search_params.dart';
-import 'package:movie_search/domain/entities/trending_movies.dart';
+import 'package:movie_search/domain/entities/pagineted_movies.dart';
 import 'package:movie_search/domain/usecases/get_trending_movies_use_case.dart';
 import 'package:movie_search/domain/usecases/search_movies_use_case.dart';
 part 'search_movies_event.dart';
@@ -47,7 +47,7 @@ class SearchMoviesBloc extends Bloc<MoviesEvent, SearchMoviesState> {
           SuccessState(
             paginetedMovies: PaginetedMovies(
               page: trendingMoviesNew.page,
-              totalPage: trendingMoviesNew.totalPage,
+              totalPages: trendingMoviesNew.totalPages,
               movies: movies,
             ),
             query: null,
@@ -99,7 +99,7 @@ class SearchMoviesBloc extends Bloc<MoviesEvent, SearchMoviesState> {
           SuccessState(
             paginetedMovies: PaginetedMovies(
               page: seachedMoviesNew.page,
-              totalPage: seachedMoviesNew.totalPage,
+              totalPages: seachedMoviesNew.totalPages,
               movies: movies,
             ),
             query: event.query,

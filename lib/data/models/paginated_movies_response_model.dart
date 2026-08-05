@@ -5,7 +5,7 @@ class PaginetedMoviesResponseModel extends PaginetedMovies {
   const PaginetedMoviesResponseModel({
     required super.page,
     required super.movies,
-    required super.totalPage,
+    required super.totalPages,
   });
 
   factory PaginetedMoviesResponseModel.fromJson(Map<String, dynamic> json) {
@@ -16,15 +16,15 @@ class PaginetedMoviesResponseModel extends PaginetedMovies {
         .toList();
 
     return PaginetedMoviesResponseModel(
-      movies: movies.toSet().toList(),
       page: json["page"],
-      totalPage: json["total_pages"],
+      totalPages: json["total_pages"],
+      movies: movies.toSet().toList(),
     );
   }
 
   static Map<String, dynamic> toJson(PaginetedMovies paginatedMovies) => {
     "page": paginatedMovies.page,
-    "total_pages": paginatedMovies.totalPage,
+    "total_pages": paginatedMovies.totalPages,
     "results": paginatedMovies.movies
         .map((movie) => MovieResponseModel.toJson(movie))
         .toList(),

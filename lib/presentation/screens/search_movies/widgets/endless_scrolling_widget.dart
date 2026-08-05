@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:movie_search/domain/entities/trending_movies.dart';
+import 'package:movie_search/domain/entities/pagineted_movies.dart';
 import 'package:movie_search/main.dart';
 import 'package:movie_search/presentation/screens/search_movies/bloc/search_movies_bloc.dart';
 
@@ -37,7 +37,8 @@ class _EndlessScrollingState extends State<EndlessScrolling> {
       final isSearchingMovies =
           bloc.state.query != null && bloc.state.query!.isNotEmpty;
 
-      if (paginetedMovies != null && paginetedMovies.page < 5) {
+      if (paginetedMovies != null &&
+          paginetedMovies.page < paginetedMovies.totalPages) {
         if (isSearchingMovies) {
           bloc.add(
             SearchMoreMoviesEvent(
