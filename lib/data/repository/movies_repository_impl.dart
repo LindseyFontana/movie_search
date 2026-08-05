@@ -8,5 +8,6 @@ class MoviesRepositoryImpl implements MoviesRepository {
   const MoviesRepositoryImpl(this._datasource);
 
   @override
-  Future<TrendingMovies> getTrendingMovies() => _datasource.getTrendingMovies();
+  Future<TrendingMovies> getTrendingMovies(int pageToSearch) =>
+      _datasource.getTrendingMovies(pageToSearch);
 }

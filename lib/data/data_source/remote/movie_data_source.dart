@@ -4,7 +4,7 @@ import 'package:movie_search/data/models/trending_movies_model.dart';
 import 'package:movie_search/domain/entities/trending_movies.dart';
 
 abstract class MovieDataSource {
-  Future<TrendingMovies> getTrendingMovies();
+  Future<TrendingMovies> getTrendingMovies(int pageToSearch);
 }
 
 class MovieDataSourceImpl implements MovieDataSource {
@@ -15,12 +15,12 @@ class MovieDataSourceImpl implements MovieDataSource {
   static const _baseURL = "https://api.themoviedb.org/3";
 
   @override
-  Future<TrendingMovies> getTrendingMovies() async {
+  Future<TrendingMovies> getTrendingMovies(int pageToSearch) async {
     const token = String.fromEnvironment("MOVIE_API_KEY");
 
     final response = await httpService.request(
-      path: "$_baseURL/trending/movie/day",
-      queryParameters: {"language": "pt-BR"},
+      path: "$_baseURL/trending/movie/week",
+      queryParameters: {"language": "pt-BR", "page": pageToSearch},
       options: Options(
         headers: {
           "accept": "application/json",
