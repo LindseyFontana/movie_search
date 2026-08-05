@@ -17,16 +17,10 @@ class TrendingMoviesModel extends TrendingMovies {
     );
   }
 
-  Map<String, dynamic> toJson(TrendingMovies trendingMovies) => {
+  static Map<String, dynamic> toJson(TrendingMovies trendingMovies) => {
     "page": trendingMovies.page,
     "results": trendingMovies.movies
-        .map(
-          (movie) => {
-            "title": movie.title,
-            "overview": movie.overview,
-            "poster_path": movie.posterPath,
-          },
-        )
+        .map((movie) => MovieResponseModel.toJson(movie))
         .toList(),
   };
 }

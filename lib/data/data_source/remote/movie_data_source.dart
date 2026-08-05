@@ -19,7 +19,7 @@ class MovieDataSourceImpl implements MovieDataSource {
     const token = String.fromEnvironment("MOVIE_API_KEY");
 
     final response = await httpService.request(
-      path: "$_baseURL/trending/movie/day",
+      path: "$_baseURL/trending/movie/week",
       queryParameters: {"language": "pt-BR", "page": pageToSearch},
       options: Options(
         headers: {
