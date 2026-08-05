@@ -87,7 +87,9 @@ class _EndlessScrollingState extends State<EndlessScrolling> {
             ),
           ),
         ),
-        if (bloc.state is LoadingMoreMoviesState) CircularProgressIndicator(),
+        if (bloc.state is LoadingMoreMoviesState) ...[
+          CircularProgressIndicator(padding: EdgeInsets.only(top: 16)),
+        ],
       ],
     );
   }
