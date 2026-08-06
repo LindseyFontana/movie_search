@@ -65,18 +65,9 @@ class _EndlessScrollingState extends State<EndlessScrolling> {
             physics: ClampingScrollPhysics(),
             itemCount: movies.length,
             itemBuilder: (BuildContext context, int index) {
-              return Image.network(
-                movies[index].posterPath,
-                frameBuilder: (context, child, frame, wasSynchronouslyLoaded) {
-                  //TODO: habilitar quando salvar imagens em cache, irá recuperá-las
-                  // if (wasSynchronouslyLoaded) return child;
-                  if (frame != null) return child;
-
-                  return _MoviePoster(
-                    title: movies[index].title,
-                    url: movies[index].posterPath,
-                  );
-                },
+              return _buildMoviePoster(
+                title: movies[index].title,
+                url: movies[index].posterPath,
               );
             },
             gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
@@ -93,22 +84,34 @@ class _EndlessScrollingState extends State<EndlessScrolling> {
       ],
     );
   }
-}
 
-class _MoviePoster extends StatelessWidget {
-  const _MoviePoster({required this.title, required this.url});
+  Widget _buildMoviePoster({required String title, String? url}) {
+    return url != null && url.isNotEmpty
+        ? Image.network(
+            url,
+            frameBuilder: (context, child, frame, wasSynchronouslyLoaded) {
+              //TODO: habilitar quando salvar imagens em cache, irá recuperá-las
+              // if (wasSynchronouslyLoaded) return child;
+              if (frame != null) return child;
 
-  final String url;
-  final String title;
+              return Container(
+                decoration: const BoxDecoration(
+                  color: Color.fromARGB(255, 59, 58, 58),
+                ),
+              );
+            },
+          )
+        : _buildDefault(title);
+  }
 
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      decoration: const BoxDecoration(color: Color.fromARGB(255, 59, 58, 58)),
-      child: Image.network(
-        url,
-        fit: BoxFit.cover,
-        errorBuilder: (context, error, stackTrace) => Text(title),
+  Widget _buildDefault(String title) {
+    return Expanded(
+      child: Container(
+        decoration: const BoxDecoration(color: Color.fromARGB(255, 59, 58, 58)),
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Center(child: Text(title)),
+        ),
       ),
     );
   }
