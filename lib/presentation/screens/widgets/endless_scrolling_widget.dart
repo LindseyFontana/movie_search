@@ -1,6 +1,10 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_cache_manager/flutter_cache_manager.dart';
+import 'package:movie_search/domain/entities/movie.dart';
 import 'package:movie_search/domain/entities/pagineted_movies.dart';
 import 'package:movie_search/main.dart';
+import 'package:movie_search/presentation/screens/movie_details/movie_details_screen.dart';
 import 'package:movie_search/presentation/screens/movies_search/bloc/movies_search_bloc.dart';
 
 class EndlessScrolling extends StatefulWidget {
@@ -65,10 +69,8 @@ class _EndlessScrollingState extends State<EndlessScrolling> {
             physics: ClampingScrollPhysics(),
             itemCount: movies.length,
             itemBuilder: (BuildContext context, int index) {
-              return _buildMoviePoster(
-                title: movies[index].title,
-                url: movies[index].posterPath,
-              );
+              //TODO: receber isso como atributo, para que EndlessScrolling seja reutilizável
+              return _buildMoviePoster(context, movies[index]);
             },
             gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
               crossAxisCount: 3,
@@ -85,23 +87,33 @@ class _EndlessScrollingState extends State<EndlessScrolling> {
     );
   }
 
-  Widget _buildMoviePoster({required String title, String? url}) {
-    return url != null && url.isNotEmpty
-        ? Image.network(
-            url,
-            frameBuilder: (context, child, frame, wasSynchronouslyLoaded) {
-              //TODO: habilitar quando salvar imagens em cache, irá recuperá-las
-              // if (wasSynchronouslyLoaded) return child;
-              if (frame != null) return child;
+  Widget _buildMoviePoster(BuildContext context, Movie movie) {
+    final url = movie.getImageUrl(size: "w154", path: movie.posterPath);
 
-              return Container(
+    return GestureDetector(
+      onTap: () => Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => MovieDetailsScreen(movie)),
+      ),
+      child: url != null && url.isNotEmpty
+          ? CachedNetworkImage(
+              imageUrl: url,
+              placeholder: (context, url) => Container(
                 decoration: const BoxDecoration(
                   color: Color.fromARGB(255, 59, 58, 58),
                 ),
-              );
-            },
-          )
-        : _buildDefault(title);
+              ),
+              cacheManager: CacheManager(
+                Config(
+                  'movies_app_cache_key',
+                  maxNrOfCacheObjects: 30,
+                  stalePeriod: const Duration(days: 5),
+                ),
+              ),
+              errorWidget: (context, url, error) => Icon(Icons.error),
+            )
+          : _buildDefault(movie.title),
+    );
   }
 
   Widget _buildDefault(String title) {
