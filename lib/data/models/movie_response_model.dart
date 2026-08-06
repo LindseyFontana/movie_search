@@ -14,8 +14,8 @@ class MovieResponseModel extends Movie {
         id: json["id"],
         title: json["title"],
         overview: json["overview"],
-        posterPath: _getImageUrl(json['poster_path']),
-        backdropPath: _getImageUrl(json["backdrop_path"]),
+        posterPath: json['poster_path'],
+        backdropPath: json['backdrop_path'],
       );
 
   static Map<String, dynamic> toJson(Movie movie) => {
@@ -24,10 +24,4 @@ class MovieResponseModel extends Movie {
     "poster_path": movie.posterPath,
     "backdrop_path": movie.backdropPath,
   };
-
-  static String? _getImageUrl(String? url) {
-    return url != null && url.isNotEmpty
-        ? "https://image.tmdb.org/t/p/w185$url"
-        : null;
-  }
 }
