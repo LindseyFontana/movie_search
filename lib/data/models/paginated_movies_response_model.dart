@@ -10,9 +10,18 @@ class PaginetedMoviesResponseModel extends PaginetedMovies {
 
   factory PaginetedMoviesResponseModel.fromJson(Map<String, dynamic> json) {
     final List<MovieResponseModel> movies = json["results"]
-        .map<MovieResponseModel>(
-          (result) => MovieResponseModel.fromJson(result),
-        )
+        .where((movie) {
+          final String? title = movie['title'];
+          final String? overview = movie['overview'];
+
+          return title != null &&
+              title.isNotEmpty &&
+              overview != null &&
+              overview.isNotEmpty;
+        })
+        .map<MovieResponseModel>((result) {
+          return MovieResponseModel.fromJson(result);
+        })
         .toList();
 
     return PaginetedMoviesResponseModel(

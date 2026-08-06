@@ -5,23 +5,17 @@ class MovieResponseModel extends Movie {
     required super.id,
     required super.title,
     required super.overview,
-    required super.posterPath,
-    required super.backdropPath,
+    super.posterPath,
+    super.backdropPath,
   });
-
-  static const _baseURL = "https://image.tmdb.org/t/p/w342";
 
   factory MovieResponseModel.fromJson(Map<String, dynamic> json) =>
       MovieResponseModel(
         id: json["id"],
         title: json["title"],
         overview: json["overview"],
-        posterPath: json["poster_path"] != null
-            ? _baseURL + json["poster_path"]
-            : 'image-quebrada',
-        backdropPath: json["backdrop_path"] != null
-            ? _baseURL + json["backdrop_path"]
-            : 'image-quebrada',
+        posterPath: _getImageUrl(json['poster_path']),
+        backdropPath: _getImageUrl(json["backdrop_path"]),
       );
 
   static Map<String, dynamic> toJson(Movie movie) => {
@@ -30,4 +24,10 @@ class MovieResponseModel extends Movie {
     "poster_path": movie.posterPath,
     "backdrop_path": movie.backdropPath,
   };
+
+  static String? _getImageUrl(String? url) {
+    return url != null && url.isNotEmpty
+        ? "https://image.tmdb.org/t/p/w185$url"
+        : null;
+  }
 }

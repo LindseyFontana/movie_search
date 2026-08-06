@@ -5,15 +5,15 @@ class Movie extends Equatable {
     required this.id,
     required this.title,
     required this.overview,
-    required this.posterPath,
-    required this.backdropPath,
+    this.posterPath,
+    this.backdropPath,
   });
 
   final int id;
   final String title;
   final String overview;
-  final String posterPath;
-  final String backdropPath;
+  final String? posterPath;
+  final String? backdropPath;
 
   @override
   List<Object?> get props => [id, title, overview, posterPath, backdropPath];

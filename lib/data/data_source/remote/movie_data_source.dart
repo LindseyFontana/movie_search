@@ -1,5 +1,4 @@
 import 'package:dio/dio.dart';
-import 'package:movie_search/core/errors.dart';
 import 'package:movie_search/data/data_source/remote/http_service.dart';
 import 'package:movie_search/data/models/paginated_movies_response_model.dart';
 import 'package:movie_search/domain/entities/pagineted_movies.dart';
