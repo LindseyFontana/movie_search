@@ -1,11 +1,11 @@
-part of 'search_movies_bloc.dart';
+part of 'movies_search_bloc.dart';
 
 sealed class MoviesEvent {}
 
-final class SearchMoviesEvent extends MoviesEvent {
+final class MoviesSearchEvent extends MoviesEvent {
   final String query;
 
-  SearchMoviesEvent(this.query);
+  MoviesSearchEvent(this.query);
 }
 
 final class SearchMoreMoviesEvent extends MoviesEvent {

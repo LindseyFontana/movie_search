@@ -1,21 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:movie_search/main.dart';
-import 'package:movie_search/presentation/screens/search_movies/bloc/search_movies_bloc.dart';
+import 'package:movie_search/presentation/screens/movies_search/bloc/movies_search_bloc.dart';
 import 'package:movie_search/presentation/screens/widgets/custom_error_widget.dart';
 import 'package:movie_search/presentation/screens/widgets/endless_scrolling_widget.dart';
 
-class SearchMoviesScreen extends StatefulWidget {
-  const SearchMoviesScreen({super.key});
+class MoviesSearchScreen extends StatefulWidget {
+  const MoviesSearchScreen({super.key});
 
   @override
   State<StatefulWidget> createState() => _SearchMoviesState();
 }
 
-class _SearchMoviesState extends State<SearchMoviesScreen> {
+class _SearchMoviesState extends State<MoviesSearchScreen> {
   final TextEditingController _inputTextController = TextEditingController();
 
-  final bloc = getIt<SearchMoviesBloc>();
+  final bloc = getIt<MoviesSearchBloc>();
 
   @override
   void initState() {
@@ -59,12 +59,12 @@ class _SearchMoviesState extends State<SearchMoviesScreen> {
                       borderRadius: BorderRadius.circular(8),
                     ),
                   ),
-                  onSubmitted: (query) => bloc.add(SearchMoviesEvent(query)),
+                  onSubmitted: (query) => bloc.add(MoviesSearchEvent(query)),
                 ),
 
                 SizedBox(height: 32),
 
-                BlocBuilder<SearchMoviesBloc, SearchMoviesState>(
+                BlocBuilder<MoviesSearchBloc, MoviesSearchState>(
                   bloc: bloc,
                   builder: (context, state) =>
                       Expanded(child: _buildBody(state)),
@@ -77,7 +77,7 @@ class _SearchMoviesState extends State<SearchMoviesScreen> {
     );
   }
 
-  Widget _buildBody(SearchMoviesState state) {
+  Widget _buildBody(MoviesSearchState state) {
     final paginetedMovies = state.paginetedMovies;
 
     if (state is SuccessState || state is LoadingMoreMoviesState) {
