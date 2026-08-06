@@ -1,5 +1,5 @@
 import 'package:dio/dio.dart';
-import 'package:flutter/widgets.dart';
+import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
 import 'package:movie_search/core/errors.dart';
 
 class HttpService {
@@ -10,6 +10,12 @@ class HttpService {
     Map<String, dynamic>? queryParameters,
     Options? options,
   }) async {
+    bool hasConnection = await InternetConnection().hasInternetAccess;
+
+    if (!hasConnection) {
+      throw ConnectionError(message: "Connection error");
+    }
+
     try {
       return await dio.get(
         path,
@@ -17,24 +23,13 @@ class HttpService {
         options: options,
       );
     } on DioException catch (error) {
-      final httpError = HttpError(
+      throw HttpError(
         statusCode: error.response?.statusCode,
         message: error.response?.statusMessage,
         stackTrace: error.stackTrace,
       );
-
-      debugPrint(httpError.toString());
-
-      throw httpError;
     } catch (error) {
-      final httpError = GenericError(
-        statusCode: 520,
-        message: "Server Returned an Unknown Error",
-      );
-
-      debugPrint(httpError.toString());
-
-      throw httpError;
+      throw GenericError(message: "Generic error", type: ErrorType.api);
     }
   }
 }

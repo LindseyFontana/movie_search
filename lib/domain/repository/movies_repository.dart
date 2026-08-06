@@ -1,5 +1,9 @@
-import 'package:movie_search/domain/entities/trending_movies.dart';
+import 'package:movie_search/domain/entities/pagineted_movies.dart';
 
 abstract class MoviesRepository {
-  Future<TrendingMovies> getTrendingMovies(int pageToSearch);
+  Future<PaginetedMovies> getTrendingMovies(int pageToSearch);
+  Future<PaginetedMovies> searchMovies({
+    required String query,
+    required int pageToSearch,
+  });
 }
