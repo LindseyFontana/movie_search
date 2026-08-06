@@ -5,8 +5,8 @@ import 'package:movie_search/data/data_source/remote/http_service.dart';
 import 'package:movie_search/data/data_source/remote/movie_data_source.dart';
 import 'package:movie_search/data/repository/movies_repository_impl.dart';
 import 'package:movie_search/domain/usecases/search_movies_use_case.dart';
-import 'package:movie_search/presentation/screens/search_movies/bloc/search_movies_bloc.dart';
-import 'package:movie_search/presentation/screens/search_movies/search_movies_screen.dart';
+import 'package:movie_search/presentation/screens/movies_search/bloc/movies_search_bloc.dart';
+import 'package:movie_search/presentation/screens/movies_search/movies_search_screen.dart';
 
 import 'domain/usecases/get_trending_movies_use_case.dart';
 
@@ -31,8 +31,8 @@ void setupLocator() {
     () => SearchMoviesUseCase(getIt<MoviesRepositoryImpl>()),
   );
 
-  getIt.registerLazySingleton<SearchMoviesBloc>(
-    () => SearchMoviesBloc(
+  getIt.registerLazySingleton<MoviesSearchBloc>(
+    () => MoviesSearchBloc(
       getIt<GetTrendingMoviesUseCase>(),
       getIt<SearchMoviesUseCase>(),
     ),
@@ -49,6 +49,6 @@ class MainApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(theme: dartTheme, home: SearchMoviesScreen());
+    return MaterialApp(theme: dartTheme, home: MoviesSearchScreen());
   }
 }

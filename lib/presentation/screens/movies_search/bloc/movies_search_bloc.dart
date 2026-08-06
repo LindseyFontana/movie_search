@@ -6,16 +6,16 @@ import 'package:movie_search/domain/entities/search_params.dart';
 import 'package:movie_search/domain/entities/pagineted_movies.dart';
 import 'package:movie_search/domain/usecases/get_trending_movies_use_case.dart';
 import 'package:movie_search/domain/usecases/search_movies_use_case.dart';
-part 'search_movies_event.dart';
-part 'search_movies_state.dart';
+part 'movies_search_event.dart';
+part 'movies_search_state.dart';
 
-class SearchMoviesBloc extends Bloc<MoviesEvent, SearchMoviesState> {
+class MoviesSearchBloc extends Bloc<MoviesEvent, MoviesSearchState> {
   final GetTrendingMoviesUseCase getTrendingMovies;
   final SearchMoviesUseCase searchMovies;
 
   static const _firstPage = 1;
 
-  SearchMoviesBloc(this.getTrendingMovies, this.searchMovies)
+  MoviesSearchBloc(this.getTrendingMovies, this.searchMovies)
     : super(InitialState()) {
     on<GetTrendingMoviesEvent>((event, emit) async {
       emit(LoadingState());
@@ -50,7 +50,7 @@ class SearchMoviesBloc extends Bloc<MoviesEvent, SearchMoviesState> {
       });
     }, transformer: droppable());
 
-    on<SearchMoviesEvent>((event, emit) async {
+    on<MoviesSearchEvent>((event, emit) async {
       emit(LoadingState());
 
       final result = await searchMovies.call(

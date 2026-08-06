@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:movie_search/domain/entities/pagineted_movies.dart';
 import 'package:movie_search/main.dart';
-import 'package:movie_search/presentation/screens/search_movies/bloc/search_movies_bloc.dart';
+import 'package:movie_search/presentation/screens/movies_search/bloc/movies_search_bloc.dart';
 
 class EndlessScrolling extends StatefulWidget {
   const EndlessScrolling({super.key, required this.paginatedMovies});
@@ -14,7 +14,7 @@ class EndlessScrolling extends StatefulWidget {
 
 class _EndlessScrollingState extends State<EndlessScrolling> {
   final _scrollControler = ScrollController();
-  final bloc = getIt<SearchMoviesBloc>();
+  final bloc = getIt<MoviesSearchBloc>();
 
   @override
   void initState() {
