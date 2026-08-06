@@ -111,7 +111,7 @@ class SearchMoviesBloc extends Bloc<MoviesEvent, SearchMoviesState> {
     required PaginetedMovies nextPage,
   }) {
     return currentPage != null
-        ? [...currentPage.movies, ...nextPage.movies]
+        ? <Movie>{...currentPage.movies, ...nextPage.movies}.toList()
         : nextPage.movies;
   }
 
