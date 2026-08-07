@@ -27,7 +27,7 @@ class UseCase<T, Params> {
     } catch (error, stackTrace) {
       return Left(
         GenericError(
-          message: "Unkow error",
+          message: error.toString(),
           stackTrace: stackTrace,
           type: ErrorType.unknow,
         ),
