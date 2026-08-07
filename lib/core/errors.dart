@@ -1,4 +1,4 @@
-enum ErrorType { api, connection, unknow }
+enum ErrorType { api, connection, unknown }
 
 class Failure implements Exception {
   final StackTrace? stackTrace;
@@ -33,7 +33,7 @@ class MissingResponseError extends Failure {
   const MissingResponseError({
     super.stackTrace,
     super.message,
-    super.type = ErrorType.unknow,
+    super.type = ErrorType.unknown,
   });
 
   @override
@@ -55,7 +55,7 @@ class GenericError extends Failure {
   const GenericError({
     super.stackTrace,
     super.message,
-    super.type = ErrorType.unknow,
+    super.type = ErrorType.unknown,
   });
 
   @override

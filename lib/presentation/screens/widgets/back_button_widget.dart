@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
-class BackButtom extends StatelessWidget {
+class BackButtonWidget extends StatelessWidget {
   final bool hasShadow;
 
-  const BackButtom({super.key, required this.hasShadow});
+  const BackButtonWidget({super.key, required this.hasShadow});
 
   @override
   Widget build(BuildContext context) {

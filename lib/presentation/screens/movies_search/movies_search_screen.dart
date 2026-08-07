@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:movie_search/core/constants/app_strings.dart';
 import 'package:movie_search/core/constants/app_sizes.dart';
-import 'package:movie_search/di/dependecy_injection.dart';
+import 'package:movie_search/di/dependency_injection.dart';
 import 'package:movie_search/presentation/extensions/movie_extension.dart';
 import 'package:movie_search/presentation/screens/movies_search/bloc/movies_search_bloc.dart';
 import 'package:movie_search/presentation/screens/widgets/custom_app_bar.dart';
@@ -122,30 +122,30 @@ class _SearchMoviesState extends State<MoviesSearchScreen> {
   }
 
   Widget _buildBody(MoviesSearchState state) {
-    final paginetedMovies = state.paginetedMovies;
+    final paginatedMovies = state.paginatedMovies;
 
     if (state is SuccessState || state is LoadingMoreMoviesState) {
-      return paginetedMovies != null && paginetedMovies.movies.isNotEmpty
+      return paginatedMovies != null && paginatedMovies.movies.isNotEmpty
           ? EndlessScrolling(
-              paginatedMovies: paginetedMovies,
+              paginatedMovies: paginatedMovies,
               itemBuilder: _buildMoviePoster,
-              itemCount: paginetedMovies.movies.length,
+              itemCount: paginatedMovies.movies.length,
               isLoading: bloc.state is LoadingMoreMoviesState,
               loadMoreItems: () {
                 final isSearchingMovies =
                     bloc.state.query != null && bloc.state.query!.isNotEmpty;
 
-                if (paginetedMovies.page < paginetedMovies.totalPages) {
+                if (paginatedMovies.page < paginatedMovies.totalPages) {
                   if (isSearchingMovies) {
                     bloc.add(
                       SearchMoreMoviesEvent(
                         bloc.state.query!,
-                        bloc.state.paginetedMovies,
+                        bloc.state.paginatedMovies,
                       ),
                     );
                   } else {
                     bloc.add(
-                      LoadMoreTrendingMoviesEvent(bloc.state.paginetedMovies),
+                      LoadMoreTrendingMoviesEvent(bloc.state.paginatedMovies),
                     );
                   }
                 }
@@ -167,7 +167,7 @@ class _SearchMoviesState extends State<MoviesSearchScreen> {
   }
 
   Widget _buildMoviePoster(BuildContext context, int index) {
-    final movies = bloc.state.paginetedMovies?.movies;
+    final movies = bloc.state.paginatedMovies?.movies;
     final movie = movies?[index];
     if (movie == null) return SizedBox.shrink();
 

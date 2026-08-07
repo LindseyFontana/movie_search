@@ -3,7 +3,8 @@ import 'package:movie_search/core/constants/app_strings.dart';
 import 'package:movie_search/core/constants/app_sizes.dart';
 import 'package:movie_search/domain/entities/movie.dart';
 import 'package:movie_search/presentation/extensions/movie_extension.dart';
-import 'package:movie_search/presentation/screens/widgets/back_buttom.dart';
+import 'package:movie_search/presentation/screens/widgets/back_button_widget.dart';
+import 'package:movie_search/presentation/screens/widgets/back_button_widgetdart';
 import 'package:movie_search/presentation/screens/widgets/default_text.dart';
 
 class MovieDetailsScreen extends StatelessWidget {
@@ -29,7 +30,7 @@ class MovieDetailsScreen extends StatelessWidget {
                 ),
                 Padding(
                   padding: EdgeInsets.all(AppSizes.padding.smallest),
-                  child: BackButtom(hasShadow: true),
+                  child: BackButtonWidget(hasShadow: true),
                 ),
               ],
             ),

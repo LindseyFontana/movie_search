@@ -19,7 +19,7 @@ class UseCase<T, Params> {
       return Left(
         MissingResponseError(
           message: 'Response is a null value',
-          type: ErrorType.unknow,
+          type: ErrorType.unknown,
         ),
       );
     } on Failure catch (error) {
@@ -29,7 +29,7 @@ class UseCase<T, Params> {
         GenericError(
           message: error.toString(),
           stackTrace: stackTrace,
-          type: ErrorType.unknow,
+          type: ErrorType.unknown,
         ),
       );
     }

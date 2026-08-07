@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:movie_search/core/constants/app_strings.dart';
 import 'package:movie_search/core/constants/app_sizes.dart';
-import 'package:movie_search/presentation/screens/widgets/back_buttom.dart';
+import 'package:movie_search/presentation/screens/widgets/back_button_widget.dart';
 import 'package:movie_search/presentation/screens/widgets/custom_app_bar.dart';
 
 class CreditsScreen extends StatelessWidget {
@@ -14,7 +14,7 @@ class CreditsScreen extends StatelessWidget {
       child: Scaffold(
         appBar: CustomAppBar(
           title: AppStrings.credits.title,
-          leading: BackButtom(hasShadow: false),
+          leading: BackButtonWidget(hasShadow: false),
         ),
         body: Padding(
           padding: EdgeInsets.all(AppSizes.padding.medium),

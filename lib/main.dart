@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:movie_search/core/constants/app_strings.dart';
 import 'package:movie_search/core/theme.dart';
-import 'package:movie_search/di/dependecy_injection.dart';
+import 'package:movie_search/di/dependency_injection.dart';
 import 'package:movie_search/domain/entities/movie.dart';
 import 'package:movie_search/presentation/screens/credits/credits_screen.dart';
 import 'package:movie_search/presentation/screens/movie_details/movie_details_screen.dart';
@@ -18,7 +18,7 @@ class MainApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      theme: dartTheme,
+      theme: darkTheme,
       initialRoute: AppStrings.routes.home,
       routes: {
         AppStrings.routes.home: (context) => MoviesSearchScreen(),

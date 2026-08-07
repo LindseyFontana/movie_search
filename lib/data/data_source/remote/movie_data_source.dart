@@ -1,11 +1,11 @@
 import 'package:movie_search/data/data_source/remote/http_service.dart';
 import 'package:movie_search/data/models/paginated_movies_response_model.dart';
-import 'package:movie_search/domain/entities/pagineted_movies.dart';
+import 'package:movie_search/domain/entities/paginated_movies.dart';
 
 abstract class MovieDataSource {
-  Future<PaginetedMovies> getTrendingMovies(int pageToSearch);
+  Future<PaginatedMovies> getTrendingMovies(int pageToSearch);
 
-  Future<PaginetedMovies> searchMovies(String query, int pageToSearch);
+  Future<PaginatedMovies> searchMovies(String query, int pageToSearch);
 }
 
 class MovieDataSourceImpl implements MovieDataSource {
@@ -21,7 +21,7 @@ class MovieDataSourceImpl implements MovieDataSource {
   };
 
   @override
-  Future<PaginetedMovies> getTrendingMovies(int pageToSearch) async {
+  Future<PaginatedMovies> getTrendingMovies(int pageToSearch) async {
     final response = await httpService.request(
       path: "$_baseURL/trending/movie/week",
       queryParameters: {..._defaultParameters, "page": pageToSearch},
@@ -29,11 +29,11 @@ class MovieDataSourceImpl implements MovieDataSource {
 
     final json = response.data as Map<String, dynamic>;
 
-    return PaginetedMoviesResponseModel.fromJson(json);
+    return PaginatedMoviesResponseModel.fromJson(json);
   }
 
   @override
-  Future<PaginetedMovies> searchMovies(String query, int pageToSearch) async {
+  Future<PaginatedMovies> searchMovies(String query, int pageToSearch) async {
     final response = await httpService.request(
       path: "$_baseURL/search/movie",
       queryParameters: {
@@ -45,6 +45,6 @@ class MovieDataSourceImpl implements MovieDataSource {
 
     final json = response.data as Map<String, dynamic>;
 
-    return PaginetedMoviesResponseModel.fromJson(json);
+    return PaginatedMoviesResponseModel.fromJson(json);
   }
 }

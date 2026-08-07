@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:movie_search/core/constants/app_sizes.dart';
-import 'package:movie_search/domain/entities/pagineted_movies.dart';
+import 'package:movie_search/domain/entities/paginated_movies.dart';
 
 class EndlessScrolling extends StatefulWidget {
   const EndlessScrolling({
@@ -12,7 +12,7 @@ class EndlessScrolling extends StatefulWidget {
     required this.isLoading,
   });
 
-  final PaginetedMovies paginatedMovies;
+  final PaginatedMovies paginatedMovies;
   final Widget? Function(BuildContext, int) itemBuilder;
   final void Function() loadMoreItems;
   final bool isLoading;
@@ -23,26 +23,26 @@ class EndlessScrolling extends StatefulWidget {
 }
 
 class _EndlessScrollingState extends State<EndlessScrolling> {
-  final _scrollControler = ScrollController();
+  final _scrollController = ScrollController();
 
   @override
   void initState() {
-    _scrollControler.addListener(_onLoadMore);
+    _scrollController.addListener(_onLoadMore);
     super.initState();
   }
 
   @override
   void dispose() {
-    _scrollControler.dispose();
+    _scrollController.dispose();
     super.dispose();
   }
 
   void _onLoadMore() {
-    if (!_scrollControler.hasClients) return;
+    if (!_scrollController.hasClients) return;
 
-    final scrollPosition = _scrollControler.offset;
+    final scrollPosition = _scrollController.offset;
 
-    final maxScroll = _scrollControler.position.maxScrollExtent;
+    final maxScroll = _scrollController.position.maxScrollExtent;
 
     final shouldLoadMoreItems = scrollPosition >= (maxScroll / 1.5);
 
@@ -55,7 +55,7 @@ class _EndlessScrollingState extends State<EndlessScrolling> {
       children: [
         Expanded(
           child: GridView.builder(
-            controller: _scrollControler,
+            controller: _scrollController,
             physics: ClampingScrollPhysics(),
             itemCount: widget.itemCount,
             itemBuilder: widget.itemBuilder,
