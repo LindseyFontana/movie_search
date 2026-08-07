@@ -48,7 +48,7 @@ class MoviesSearchBloc extends Bloc<MoviesEvent, MoviesSearchState> {
       });
     }, transformer: droppable());
 
-    on<MoviesSearchEvent>((event, emit) async {
+    on<SearchMoviesEvent>((event, emit) async {
       emit(LoadingState());
 
       final result = await searchMovies.call(

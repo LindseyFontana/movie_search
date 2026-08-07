@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:movie_search/core/constants/app_sizes.dart';
 
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   final Widget? leading;
@@ -16,7 +15,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   @override
   Widget build(BuildContext context) {
     return AppBar(
-      title: Text(title, style: TextStyle(fontSize: AppSizes.font.titleSmall)),
+      title: Text(title, style: Theme.of(context).textTheme.titleSmall),
       leading: leading,
       actions: actions,
     );
