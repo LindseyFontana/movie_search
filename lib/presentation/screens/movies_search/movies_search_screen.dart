@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
+import 'package:movie_search/core/constants/app_strings.dart';
 import 'package:movie_search/main.dart';
 import 'package:movie_search/presentation/screens/movie_details/movie_details_screen.dart';
 import 'package:movie_search/presentation/screens/movies_search/bloc/movies_search_bloc.dart';
@@ -38,7 +39,7 @@ class _SearchMoviesState extends State<MoviesSearchScreen> {
       child: GestureDetector(
         onTap: () => FocusScope.of(context).unfocus(),
         child: Scaffold(
-          appBar: AppBar(title: Center(child: Text('Filmes'))),
+          appBar: AppBar(title: Center(child: Text(AppStrings.title))),
           body: Padding(
             padding: EdgeInsets.all(16),
             child: Column(
@@ -46,8 +47,8 @@ class _SearchMoviesState extends State<MoviesSearchScreen> {
                 TextField(
                   controller: _inputTextController,
                   decoration: InputDecoration(
-                    labelText: 'Pesquisar',
-                    hintText: 'Digite o título do filme',
+                    labelText: AppStrings.movieSearch.labelText,
+                    hintText: AppStrings.movieSearch.hintText,
                     suffixIcon: IconButton(
                       icon: Icon(Icons.clear),
                       onPressed: () {
@@ -110,7 +111,7 @@ class _SearchMoviesState extends State<MoviesSearchScreen> {
             )
           : Padding(
               padding: EdgeInsets.only(top: 32),
-              child: Text("Não há filmes"),
+              child: Text(AppStrings.movieSearch.emptyList),
             );
     }
     if (state is ErrorState) {
