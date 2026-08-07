@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:movie_search/core/constants/app_strings.dart';
 import 'package:movie_search/core/constants/app_sizes.dart';
 import 'package:movie_search/di/dependecy_injection.dart';
+import 'package:movie_search/presentation/extensions/movie_extension.dart';
 import 'package:movie_search/presentation/screens/movies_search/bloc/movies_search_bloc.dart';
 import 'package:movie_search/presentation/screens/widgets/custom_app_bar.dart';
 import 'package:movie_search/presentation/screens/widgets/custom_error_widget.dart';

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:movie_search/core/constants/app_strings.dart';
 import 'package:movie_search/core/constants/app_sizes.dart';
 import 'package:movie_search/domain/entities/movie.dart';
+import 'package:movie_search/presentation/extensions/movie_extension.dart';
 import 'package:movie_search/presentation/screens/widgets/back_buttom.dart';
 import 'package:movie_search/presentation/screens/widgets/default_text.dart';
 

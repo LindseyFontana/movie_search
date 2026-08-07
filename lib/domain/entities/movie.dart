@@ -15,12 +15,6 @@ class Movie extends Equatable {
   final String? posterPath;
   final String? backdropPath;
 
-  String? getImageUrl({required String size, String? path}) {
-    return path != null && path.isNotEmpty
-        ? "https://image.tmdb.org/t/p/$size$path"
-        : null;
-  }
-
   @override
   List<Object?> get props => [id, title, overview, posterPath, backdropPath];
 }
