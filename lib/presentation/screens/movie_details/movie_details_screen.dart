@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:movie_search/core/constants/app_strings.dart';
 import 'package:movie_search/domain/entities/movie.dart';
 
 class MovieDetailsScreen extends StatelessWidget {
@@ -17,7 +18,7 @@ class MovieDetailsScreen extends StatelessWidget {
             Stack(
               children: [
                 _buildMovieImage(
-                  size: "w780",
+                  size: AppStrings.imageSizes.backDrop,
                   loaderHeight: mediaQuery.height / 4,
                   loaderWidget: mediaQuery.width,
                   path: movie.backdropPath,
@@ -67,7 +68,7 @@ class MovieDetailsScreen extends StatelessWidget {
                         child: _buildMovieImage(
                           loaderHeight: 150,
                           loaderWidget: 100,
-                          size: "w92",
+                          size: AppStrings.imageSizes.posterSmall,
                           path: movie.posterPath,
                         ),
                       ),

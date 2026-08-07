@@ -2,6 +2,7 @@ class AppStrings {
   static const title = 'Filmes';
 
   static const errors = _AppErrors();
+  static const imageSizes = _ImageSizes();
   static const movieSearch = _MovieSearchScreen();
 }
 
@@ -24,4 +25,12 @@ class _MovieSearchScreen {
   final hintText = 'Digite o título do filme';
 
   final emptyList = 'Filmes não encontrados';
+}
+
+class _ImageSizes {
+  const _ImageSizes();
+
+  final posterLarge = "w154";
+  final posterSmall = "w92";
+  final backDrop = "w780";
 }
