@@ -5,9 +5,8 @@ import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:movie_search/core/constants/app_strings.dart';
 import 'package:movie_search/core/constants/app_sizes.dart';
 import 'package:movie_search/di/dependecy_injection.dart';
-import 'package:movie_search/presentation/screens/credits/credits_screen.dart';
-import 'package:movie_search/presentation/screens/movie_details/movie_details_screen.dart';
 import 'package:movie_search/presentation/screens/movies_search/bloc/movies_search_bloc.dart';
+import 'package:movie_search/presentation/screens/widgets/custom_app_bar.dart';
 import 'package:movie_search/presentation/screens/widgets/custom_error_widget.dart';
 import 'package:movie_search/presentation/screens/widgets/endless_scrolling_widget.dart';
 
@@ -44,15 +43,13 @@ class _SearchMoviesState extends State<MoviesSearchScreen> {
       child: GestureDetector(
         onTap: () => FocusScope.of(context).unfocus(),
         child: Scaffold(
-          appBar: AppBar(
-            title: Text(
-              AppStrings.title,
-              style: TextStyle(fontSize: AppSizes.font.titleSmall),
-            ),
+          appBar: CustomAppBar(
+            title: AppStrings.title,
             actions: [
               InkWell(
                 splashColor: Color.fromRGBO(125, 125, 125, 0.63),
-                onTap: () => Navigator.pushNamed(context, '/credits'),
+                onTap: () =>
+                    Navigator.pushNamed(context, AppStrings.routes.credits),
                 customBorder: const CircleBorder(),
                 child: Padding(
                   padding: const EdgeInsets.fromLTRB(8, 0, 8, 16),
@@ -179,8 +176,11 @@ class _SearchMoviesState extends State<MoviesSearchScreen> {
     );
 
     return GestureDetector(
-      onTap: () =>
-          Navigator.pushNamed(context, '/movie_details', arguments: movie),
+      onTap: () => Navigator.pushNamed(
+        context,
+        AppStrings.routes.movieDetails,
+        arguments: movie,
+      ),
       child: url != null && url.isNotEmpty
           ? CachedNetworkImage(
               imageUrl: url,
@@ -203,13 +203,11 @@ class _SearchMoviesState extends State<MoviesSearchScreen> {
   }
 
   Widget _buildDefault(String title) {
-    return Expanded(
-      child: Container(
-        decoration: const BoxDecoration(color: Color.fromARGB(255, 59, 58, 58)),
-        child: Padding(
-          padding: EdgeInsets.all(AppSizes.padding.smallest),
-          child: Center(child: Text(title)),
-        ),
+    return Container(
+      decoration: const BoxDecoration(color: Color.fromARGB(255, 59, 58, 58)),
+      child: Padding(
+        padding: EdgeInsets.all(AppSizes.padding.smallest),
+        child: Center(child: Text(title)),
       ),
     );
   }
