@@ -1,13 +1,19 @@
 import 'package:movie_search/domain/entities/movie.dart';
 
-class MovieResponseModel extends Movie {
+class MovieResponseModel {
   const MovieResponseModel({
-    required super.id,
-    required super.title,
-    required super.overview,
-    super.posterPath,
-    super.backdropPath,
+    required this.id,
+    required this.title,
+    required this.overview,
+    this.posterPath,
+    this.backdropPath,
   });
+
+  final int id;
+  final String title;
+  final String overview;
+  final String? posterPath;
+  final String? backdropPath;
 
   factory MovieResponseModel.fromJson(Map<String, dynamic> json) =>
       MovieResponseModel(
@@ -19,9 +25,18 @@ class MovieResponseModel extends Movie {
       );
 
   static Map<String, dynamic> toJson(Movie movie) => {
+    "id": movie.id,
     "title": movie.title,
     "overview": movie.overview,
     "poster_path": movie.posterPath,
     "backdrop_path": movie.backdropPath,
   };
+
+  Movie toEntity() => Movie(
+    id: id,
+    title: title,
+    overview: overview,
+    posterPath: posterPath,
+    backdropPath: backdropPath,
+  );
 }

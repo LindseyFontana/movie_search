@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:movie_search/core/errors.dart';
 import 'package:movie_search/domain/entities/movie.dart';
 import 'package:movie_search/domain/entities/search_params.dart';
-import 'package:movie_search/domain/entities/pagineted_movies.dart';
+import 'package:movie_search/domain/entities/paginated_movies.dart';
 import 'package:movie_search/domain/usecases/get_trending_movies_use_case.dart';
 import 'package:movie_search/domain/usecases/search_movies_use_case.dart';
 part 'movies_search_event.dart';
@@ -23,13 +23,12 @@ class MoviesSearchBloc extends Bloc<MoviesEvent, MoviesSearchState> {
       final result = await getTrendingMovies.call(_firstPage);
 
       result.fold((error) => emit(ErrorState(error)), (trendingMovies) {
-        emit(SuccessState(paginetedMovies: trendingMovies));
-        return;
+        emit(SuccessState(paginatedMovies: trendingMovies));
       });
     });
 
     on<LoadMoreTrendingMoviesEvent>((event, emit) async {
-      emit(LoadingMoreMoviesState(paginetedMovies: event.trendingMovies));
+      emit(LoadingMoreMoviesState(paginatedMovies: event.trendingMovies));
 
       final currentPage = event.trendingMovies;
 
@@ -40,17 +39,16 @@ class MoviesSearchBloc extends Bloc<MoviesEvent, MoviesSearchState> {
       result.fold((error) => emit(ErrorState(error)), (nextPage) {
         emit(
           SuccessState(
-            paginetedMovies: _getPaginetedMovies(
+            paginatedMovies: _getPaginatedMovies(
               currentPage: currentPage,
               nextPage: nextPage,
             ),
           ),
         );
-        return;
       });
     }, transformer: droppable());
 
-    on<MoviesSearchEvent>((event, emit) async {
+    on<SearchMoviesEvent>((event, emit) async {
       emit(LoadingState());
 
       final result = await searchMovies.call(
@@ -60,19 +58,19 @@ class MoviesSearchBloc extends Bloc<MoviesEvent, MoviesSearchState> {
       result.fold(
         (error) => emit(ErrorState(error)),
         (nextPage) =>
-            emit(SuccessState(paginetedMovies: nextPage, query: event.query)),
+            emit(SuccessState(paginatedMovies: nextPage, query: event.query)),
       );
     });
 
     on<SearchMoreMoviesEvent>((event, emit) async {
       emit(
         LoadingMoreMoviesState(
-          paginetedMovies: event.paginetedMovies,
+          paginatedMovies: event.paginatedMovies,
           query: event.query,
         ),
       );
 
-      final currentPage = event.paginetedMovies;
+      final currentPage = event.paginatedMovies;
 
       final nextPageNumber = _getNextPage(currentPage);
 
@@ -83,23 +81,22 @@ class MoviesSearchBloc extends Bloc<MoviesEvent, MoviesSearchState> {
       result.fold((error) => emit(ErrorState(error)), (nextPage) {
         emit(
           SuccessState(
-            paginetedMovies: _getPaginetedMovies(
+            paginatedMovies: _getPaginatedMovies(
               currentPage: currentPage,
               nextPage: nextPage,
             ),
             query: event.query,
           ),
         );
-        return;
       });
     }, transformer: droppable());
   }
 
-  PaginetedMovies _getPaginetedMovies({
-    PaginetedMovies? currentPage,
-    required PaginetedMovies nextPage,
+  PaginatedMovies _getPaginatedMovies({
+    PaginatedMovies? currentPage,
+    required PaginatedMovies nextPage,
   }) {
-    return PaginetedMovies(
+    return PaginatedMovies(
       page: nextPage.page,
       totalPages: nextPage.totalPages,
       movies: _appendMovies(currentPage: currentPage, nextPage: nextPage),
@@ -107,15 +104,15 @@ class MoviesSearchBloc extends Bloc<MoviesEvent, MoviesSearchState> {
   }
 
   List<Movie> _appendMovies({
-    PaginetedMovies? currentPage,
-    required PaginetedMovies nextPage,
+    PaginatedMovies? currentPage,
+    required PaginatedMovies nextPage,
   }) {
     return currentPage != null
         ? <Movie>{...currentPage.movies, ...nextPage.movies}.toList()
         : nextPage.movies;
   }
 
-  int _getNextPage(PaginetedMovies? currentPage) {
-    return currentPage?.page != null ? currentPage!.page + 1 : _firstPage;
+  int _getNextPage(PaginatedMovies? currentPage) {
+    return currentPage != null ? currentPage.page + 1 : _firstPage;
   }
 }

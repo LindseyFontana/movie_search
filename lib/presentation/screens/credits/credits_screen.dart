@@ -1,43 +1,45 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:movie_search/core/constants/app_strings.dart';
+import 'package:movie_search/core/constants/app_sizes.dart';
+import 'package:movie_search/presentation/screens/widgets/back_button_widget.dart';
+import 'package:movie_search/presentation/screens/widgets/custom_app_bar.dart';
 
 class CreditsScreen extends StatelessWidget {
   const CreditsScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final textStyle = Theme.of(context).textTheme;
+
     return SafeArea(
       child: Scaffold(
-        appBar: AppBar(
-          title: Text(AppStrings.credits.title),
-          leading: InkWell(
-            onTap: () => Navigator.pop(context),
-            customBorder: const CircleBorder(),
-            child: const Icon(Icons.arrow_back_ios, color: Colors.white),
-          ),
+        appBar: CustomAppBar(
+          title: AppStrings.credits.title,
+          leading: BackButtonWidget(hasShadow: false),
         ),
         body: Padding(
-          padding: const EdgeInsets.all(16),
+          padding: EdgeInsets.all(AppSizes.padding.medium),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Text(
                 AppStrings.credits.author,
-                style: TextStyle(fontSize: 20),
+                style: textStyle.titleLarge,
+
                 textAlign: TextAlign.center,
               ),
-              SizedBox(height: 32),
+              SizedBox(height: AppSizes.spacing.large),
               Text(
                 AppStrings.credits.tmdbCredits,
-                style: TextStyle(fontSize: 14),
+                style: textStyle.bodyLarge,
                 textAlign: TextAlign.center,
               ),
-              SizedBox(height: 16),
+              SizedBox(height: AppSizes.spacing.smallest),
               Container(
                 color: Colors.white,
-                padding: EdgeInsets.all(8),
+                padding: EdgeInsets.all(AppSizes.padding.smallest),
                 child: SvgPicture.asset(
                   'assets/images/logo-tmdb.svg',
                   width: 40,

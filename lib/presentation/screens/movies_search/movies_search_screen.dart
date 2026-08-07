@@ -1,13 +1,14 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:movie_search/core/constants/app_strings.dart';
-import 'package:movie_search/main.dart';
-import 'package:movie_search/presentation/screens/credits/credits_screen.dart';
-import 'package:movie_search/presentation/screens/movie_details/movie_details_screen.dart';
+import 'package:movie_search/core/constants/app_sizes.dart';
+import 'package:movie_search/di/dependency_injection.dart';
+import 'package:movie_search/presentation/extensions/movie_extension.dart';
 import 'package:movie_search/presentation/screens/movies_search/bloc/movies_search_bloc.dart';
+import 'package:movie_search/presentation/screens/widgets/custom_app_bar.dart';
 import 'package:movie_search/presentation/screens/widgets/custom_error_widget.dart';
+import 'package:movie_search/presentation/screens/widgets/default_text.dart';
 import 'package:movie_search/presentation/screens/widgets/endless_scrolling_widget.dart';
 
 class MoviesSearchScreen extends StatefulWidget {
@@ -19,12 +20,14 @@ class MoviesSearchScreen extends StatefulWidget {
 
 class _SearchMoviesState extends State<MoviesSearchScreen> {
   final TextEditingController _inputTextController = TextEditingController();
-
-  final bloc = getIt<MoviesSearchBloc>();
+  late final MoviesSearchBloc bloc;
 
   @override
   void initState() {
+    bloc = context.read<MoviesSearchBloc>();
+
     bloc.add(GetTrendingMoviesEvent());
+
     super.initState();
   }
 
@@ -36,32 +39,32 @@ class _SearchMoviesState extends State<MoviesSearchScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final textStyle = Theme.of(context).textTheme;
+
     return SafeArea(
       child: GestureDetector(
         onTap: () => FocusScope.of(context).unfocus(),
         child: Scaffold(
-          appBar: AppBar(
-            title: Text(AppStrings.title),
-
+          appBar: CustomAppBar(
+            title: AppStrings.title,
             actions: [
-              Padding(
-                padding: const EdgeInsets.fromLTRB(0, 0, 8, 16),
-                child: InkWell(
-                  onTap: () => Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => CreditsScreen()),
-                  ),
-                  customBorder: const CircleBorder(),
+              InkWell(
+                splashColor: Color.fromRGBO(125, 125, 125, 0.63),
+                onTap: () =>
+                    Navigator.pushNamed(context, AppStrings.routes.credits),
+                customBorder: const CircleBorder(),
+                child: Padding(
+                  padding: const EdgeInsets.fromLTRB(8, 0, 8, 16),
                   child: Text(
                     AppStrings.movieSearch.ellipsis,
-                    style: TextStyle(fontSize: 30),
+                    style: textStyle.titleLarge,
                   ),
                 ),
               ),
             ],
           ),
           body: Padding(
-            padding: EdgeInsets.all(16),
+            padding: EdgeInsets.all(AppSizes.padding.medium),
             child: Column(
               children: [
                 TextField(
@@ -73,7 +76,9 @@ class _SearchMoviesState extends State<MoviesSearchScreen> {
                       icon: Icon(Icons.clear),
                       onPressed: () {
                         _inputTextController.text = "";
+
                         bloc.add(GetTrendingMoviesEvent());
+
                         FocusScope.of(context).unfocus();
                       },
                     ),
@@ -81,15 +86,33 @@ class _SearchMoviesState extends State<MoviesSearchScreen> {
                       borderRadius: BorderRadius.circular(8),
                     ),
                   ),
-                  onSubmitted: (query) => bloc.add(MoviesSearchEvent(query)),
+                  onSubmitted: (query) {
+                    bloc.add(SearchMoviesEvent(query));
+                  },
                 ),
 
-                SizedBox(height: 32),
+                SizedBox(height: AppSizes.spacing.medium),
 
                 BlocBuilder<MoviesSearchBloc, MoviesSearchState>(
-                  bloc: bloc,
-                  builder: (context, state) =>
-                      Expanded(child: _buildBody(state)),
+                  builder: (context, state) {
+                    final isSearching =
+                        state.query != null && state.query!.isNotEmpty;
+
+                    final subtitle = isSearching
+                        ? AppStrings.movieSearch.searchTitle
+                        : AppStrings.movieSearch.trendingTitle;
+
+                    return Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(subtitle, style: textStyle.bodyLarge),
+                          SizedBox(height: AppSizes.spacing.small),
+                          Expanded(child: _buildBody(state)),
+                        ],
+                      ),
+                    );
+                  },
                 ),
               ],
             ),
@@ -100,38 +123,43 @@ class _SearchMoviesState extends State<MoviesSearchScreen> {
   }
 
   Widget _buildBody(MoviesSearchState state) {
-    final paginetedMovies = state.paginetedMovies;
+    final paginatedMovies = state.paginatedMovies;
+
+    final textStyle = Theme.of(context).textTheme;
 
     if (state is SuccessState || state is LoadingMoreMoviesState) {
-      return paginetedMovies != null && paginetedMovies.movies.isNotEmpty
+      return paginatedMovies != null && paginatedMovies.movies.isNotEmpty
           ? EndlessScrolling(
-              paginatedMovies: paginetedMovies,
+              paginatedMovies: paginatedMovies,
               itemBuilder: _buildMoviePoster,
-              itemCount: paginetedMovies.movies.length,
+              itemCount: paginatedMovies.movies.length,
               isLoading: bloc.state is LoadingMoreMoviesState,
               loadMoreItems: () {
                 final isSearchingMovies =
                     bloc.state.query != null && bloc.state.query!.isNotEmpty;
 
-                if (paginetedMovies.page < paginetedMovies.totalPages) {
+                if (paginatedMovies.page < paginatedMovies.totalPages) {
                   if (isSearchingMovies) {
                     bloc.add(
                       SearchMoreMoviesEvent(
                         bloc.state.query!,
-                        bloc.state.paginetedMovies,
+                        bloc.state.paginatedMovies,
                       ),
                     );
                   } else {
                     bloc.add(
-                      LoadMoreTrendingMoviesEvent(bloc.state.paginetedMovies),
+                      LoadMoreTrendingMoviesEvent(bloc.state.paginatedMovies),
                     );
                   }
                 }
               },
             )
           : Padding(
-              padding: EdgeInsets.only(top: 32),
-              child: Text(AppStrings.movieSearch.emptyList),
+              padding: EdgeInsets.only(top: AppSizes.padding.large),
+              child: Text(
+                AppStrings.movieSearch.emptyList,
+                style: textStyle.titleLarge,
+              ),
             );
     }
     if (state is ErrorState) {
@@ -142,16 +170,24 @@ class _SearchMoviesState extends State<MoviesSearchScreen> {
   }
 
   Widget _buildMoviePoster(BuildContext context, int index) {
-    final movies = bloc.state.paginetedMovies?.movies;
+    final movies = context
+        .read<MoviesSearchBloc>()
+        .state
+        .paginatedMovies
+        ?.movies;
     final movie = movies?[index];
-    if (movie == null) return SizedBox();
+    if (movie == null) return SizedBox.shrink();
 
-    final url = movie.getImageUrl(size: "w154", path: movie.posterPath);
+    final url = movie.getImageUrl(
+      size: AppStrings.imageSizes.posterLarge,
+      path: movie.posterPath,
+    );
 
     return GestureDetector(
-      onTap: () => Navigator.push(
+      onTap: () => Navigator.pushNamed(
         context,
-        MaterialPageRoute(builder: (context) => MovieDetailsScreen(movie)),
+        AppStrings.routes.movieDetails,
+        arguments: movie,
       ),
       child: url != null && url.isNotEmpty
           ? CachedNetworkImage(
@@ -161,28 +197,10 @@ class _SearchMoviesState extends State<MoviesSearchScreen> {
                   color: Color.fromARGB(255, 59, 58, 58),
                 ),
               ),
-              cacheManager: CacheManager(
-                Config(
-                  'movies_app_cache_key',
-                  maxNrOfCacheObjects: 30,
-                  stalePeriod: const Duration(days: 5),
-                ),
-              ),
+              cacheManager: CustomCacheManager.instance,
               errorWidget: (context, url, error) => Icon(Icons.error),
             )
-          : _buildDefault(movie.title),
-    );
-  }
-
-  Widget _buildDefault(String title) {
-    return Expanded(
-      child: Container(
-        decoration: const BoxDecoration(color: Color.fromARGB(255, 59, 58, 58)),
-        child: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Center(child: Text(title)),
-        ),
-      ),
+          : DefaultText(movie.title),
     );
   }
 }
