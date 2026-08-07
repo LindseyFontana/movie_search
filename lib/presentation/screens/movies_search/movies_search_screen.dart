@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:movie_search/core/constants/app_strings.dart';
+import 'package:movie_search/core/constants/app_sizes.dart';
 import 'package:movie_search/di/dependecy_injection.dart';
 import 'package:movie_search/presentation/screens/credits/credits_screen.dart';
 import 'package:movie_search/presentation/screens/movie_details/movie_details_screen.dart';
@@ -44,23 +45,27 @@ class _SearchMoviesState extends State<MoviesSearchScreen> {
         onTap: () => FocusScope.of(context).unfocus(),
         child: Scaffold(
           appBar: AppBar(
-            title: Text(AppStrings.title),
+            title: Text(
+              AppStrings.title,
+              style: TextStyle(fontSize: AppSizes.font.titleSmall),
+            ),
             actions: [
-              Padding(
-                padding: const EdgeInsets.fromLTRB(0, 0, 8, 16),
-                child: InkWell(
-                  onTap: () => Navigator.pushNamed(context, '/credits'),
-                  customBorder: const CircleBorder(),
+              InkWell(
+                splashColor: Color.fromRGBO(125, 125, 125, 0.63),
+                onTap: () => Navigator.pushNamed(context, '/credits'),
+                customBorder: const CircleBorder(),
+                child: Padding(
+                  padding: const EdgeInsets.fromLTRB(8, 0, 8, 16),
                   child: Text(
                     AppStrings.movieSearch.ellipsis,
-                    style: TextStyle(fontSize: 30),
+                    style: TextStyle(fontSize: AppSizes.font.title),
                   ),
                 ),
               ),
             ],
           ),
           body: Padding(
-            padding: EdgeInsets.all(16),
+            padding: EdgeInsets.all(AppSizes.padding.medium),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -91,16 +96,19 @@ class _SearchMoviesState extends State<MoviesSearchScreen> {
                   },
                 ),
 
-                SizedBox(height: 24),
+                SizedBox(height: AppSizes.spacing.medium),
 
                 ValueListenableBuilder<String>(
                   valueListenable: title,
                   builder: (context, value, child) {
-                    return Text(title.value);
+                    return Text(
+                      title.value,
+                      style: TextStyle(fontSize: AppSizes.font.subtitle),
+                    );
                   },
                 ),
 
-                SizedBox(height: 24),
+                SizedBox(height: AppSizes.spacing.small),
 
                 BlocBuilder<MoviesSearchBloc, MoviesSearchState>(
                   bloc: bloc,
@@ -146,8 +154,11 @@ class _SearchMoviesState extends State<MoviesSearchScreen> {
               },
             )
           : Padding(
-              padding: EdgeInsets.only(top: 32),
-              child: Text(AppStrings.movieSearch.emptyList),
+              padding: EdgeInsets.only(top: AppSizes.padding.large),
+              child: Text(
+                AppStrings.movieSearch.emptyList,
+                style: TextStyle(fontSize: AppSizes.font.subtitle),
+              ),
             );
     }
     if (state is ErrorState) {
@@ -160,7 +171,7 @@ class _SearchMoviesState extends State<MoviesSearchScreen> {
   Widget _buildMoviePoster(BuildContext context, int index) {
     final movies = bloc.state.paginetedMovies?.movies;
     final movie = movies?[index];
-    if (movie == null) return SizedBox();
+    if (movie == null) return SizedBox.shrink();
 
     final url = movie.getImageUrl(
       size: AppStrings.imageSizes.posterLarge,
@@ -196,7 +207,7 @@ class _SearchMoviesState extends State<MoviesSearchScreen> {
       child: Container(
         decoration: const BoxDecoration(color: Color.fromARGB(255, 59, 58, 58)),
         child: Padding(
-          padding: const EdgeInsets.all(8.0),
+          padding: EdgeInsets.all(AppSizes.padding.smallest),
           child: Center(child: Text(title)),
         ),
       ),

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:movie_search/core/constants/app_strings.dart';
+import 'package:movie_search/core/constants/app_sizes.dart';
 
 class CreditsScreen extends StatelessWidget {
   const CreditsScreen({super.key});
@@ -10,7 +11,10 @@ class CreditsScreen extends StatelessWidget {
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
-          title: Text(AppStrings.credits.title),
+          title: Text(
+            AppStrings.credits.title,
+            style: TextStyle(fontSize: AppSizes.font.titleSmall),
+          ),
           leading: InkWell(
             onTap: () => Navigator.pop(context),
             customBorder: const CircleBorder(),
@@ -18,26 +22,26 @@ class CreditsScreen extends StatelessWidget {
           ),
         ),
         body: Padding(
-          padding: const EdgeInsets.all(16),
+          padding: EdgeInsets.all(AppSizes.padding.medium),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Text(
                 AppStrings.credits.author,
-                style: TextStyle(fontSize: 20),
+                style: TextStyle(fontSize: AppSizes.font.title),
                 textAlign: TextAlign.center,
               ),
-              SizedBox(height: 32),
+              SizedBox(height: AppSizes.spacing.large),
               Text(
                 AppStrings.credits.tmdbCredits,
-                style: TextStyle(fontSize: 14),
+                style: TextStyle(fontSize: AppSizes.font.subtitleSmall),
                 textAlign: TextAlign.center,
               ),
-              SizedBox(height: 16),
+              SizedBox(height: AppSizes.spacing.smallest),
               Container(
                 color: Colors.white,
-                padding: EdgeInsets.all(8),
+                padding: EdgeInsets.all(AppSizes.padding.smallest),
                 child: SvgPicture.asset(
                   'assets/images/logo-tmdb.svg',
                   width: 40,

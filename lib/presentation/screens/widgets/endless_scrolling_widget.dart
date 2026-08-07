@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:movie_search/core/constants/app_sizes.dart';
 import 'package:movie_search/di/dependecy_injection.dart';
 import 'package:movie_search/domain/entities/pagineted_movies.dart';
 import 'package:movie_search/presentation/screens/movies_search/bloc/movies_search_bloc.dart';
@@ -70,7 +71,9 @@ class _EndlessScrollingState extends State<EndlessScrolling> {
           ),
         ),
         if (widget.isLoading) ...[
-          CircularProgressIndicator(padding: EdgeInsets.only(top: 16)),
+          CircularProgressIndicator(
+            padding: EdgeInsets.only(top: AppSizes.padding.medium),
+          ),
         ],
       ],
     );

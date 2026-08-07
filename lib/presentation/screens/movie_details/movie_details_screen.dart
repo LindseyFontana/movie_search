@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:movie_search/core/constants/app_strings.dart';
+import 'package:movie_search/core/constants/app_sizes.dart';
 import 'package:movie_search/domain/entities/movie.dart';
 
 class MovieDetailsScreen extends StatelessWidget {
@@ -24,7 +25,7 @@ class MovieDetailsScreen extends StatelessWidget {
                   path: movie.backdropPath,
                 ),
                 Padding(
-                  padding: const EdgeInsets.all(8.0),
+                  padding: EdgeInsets.all(AppSizes.padding.smallest),
                   child: InkWell(
                     onTap: () => Navigator.pop(context),
                     customBorder: const CircleBorder(),
@@ -47,7 +48,7 @@ class MovieDetailsScreen extends StatelessWidget {
             ),
 
             Padding(
-              padding: const EdgeInsets.all(16),
+              padding: EdgeInsets.all(AppSizes.padding.medium),
               child: Column(
                 children: [
                   Row(
@@ -59,7 +60,7 @@ class MovieDetailsScreen extends StatelessWidget {
                           movie.title,
                           maxLines: 2,
                           overflow: TextOverflow.ellipsis,
-                          style: TextStyle(fontSize: 24),
+                          style: TextStyle(fontSize: AppSizes.font.title),
                         ),
                       ),
 
@@ -74,8 +75,11 @@ class MovieDetailsScreen extends StatelessWidget {
                       ),
                     ],
                   ),
-                  SizedBox(height: 16),
-                  Text(movie.overview, style: TextStyle(fontSize: 16)),
+                  SizedBox(height: AppSizes.spacing.medium),
+                  Text(
+                    movie.overview,
+                    style: TextStyle(fontSize: AppSizes.font.subtitle),
+                  ),
                 ],
               ),
             ),

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:movie_search/core/constants/app_strings.dart';
+import 'package:movie_search/core/constants/app_sizes.dart';
 import 'package:movie_search/core/errors.dart';
 
 class CustomErrorWidget extends StatelessWidget {
@@ -37,9 +38,10 @@ class CustomErrorWidget extends StatelessWidget {
         size: 80,
         color: const Color.fromRGBO(161, 45, 36, 1),
       ),
-      SizedBox(height: 8),
-      Text(title, style: TextStyle(fontSize: 24)),
-      if (subtitle != null) Text(subtitle, style: TextStyle(fontSize: 20)),
+      SizedBox(height: AppSizes.spacing.small),
+      Text(title, style: TextStyle(fontSize: AppSizes.font.title)),
+      if (subtitle != null)
+        Text(subtitle, style: TextStyle(fontSize: AppSizes.font.subtitle)),
     ],
   );
 }
