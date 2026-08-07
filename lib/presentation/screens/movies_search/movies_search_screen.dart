@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:movie_search/core/constants/app_strings.dart';
-import 'package:movie_search/main.dart';
+import 'package:movie_search/di/dependecy_injection.dart';
 import 'package:movie_search/presentation/screens/credits/credits_screen.dart';
 import 'package:movie_search/presentation/screens/movie_details/movie_details_screen.dart';
 import 'package:movie_search/presentation/screens/movies_search/bloc/movies_search_bloc.dart';
@@ -22,6 +22,8 @@ class _SearchMoviesState extends State<MoviesSearchScreen> {
 
   final bloc = getIt<MoviesSearchBloc>();
 
+  final title = ValueNotifier<String>(AppStrings.movieSearch.trendingTitle);
+
   @override
   void initState() {
     bloc.add(GetTrendingMoviesEvent());
@@ -31,6 +33,7 @@ class _SearchMoviesState extends State<MoviesSearchScreen> {
   @override
   void dispose() {
     _inputTextController.dispose();
+    title.dispose();
     super.dispose();
   }
 
@@ -42,15 +45,11 @@ class _SearchMoviesState extends State<MoviesSearchScreen> {
         child: Scaffold(
           appBar: AppBar(
             title: Text(AppStrings.title),
-
             actions: [
               Padding(
                 padding: const EdgeInsets.fromLTRB(0, 0, 8, 16),
                 child: InkWell(
-                  onTap: () => Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => CreditsScreen()),
-                  ),
+                  onTap: () => Navigator.pushNamed(context, '/credits'),
                   customBorder: const CircleBorder(),
                   child: Text(
                     AppStrings.movieSearch.ellipsis,
@@ -63,6 +62,7 @@ class _SearchMoviesState extends State<MoviesSearchScreen> {
           body: Padding(
             padding: EdgeInsets.all(16),
             child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 TextField(
                   controller: _inputTextController,
@@ -73,7 +73,10 @@ class _SearchMoviesState extends State<MoviesSearchScreen> {
                       icon: Icon(Icons.clear),
                       onPressed: () {
                         _inputTextController.text = "";
+                        title.value = AppStrings.movieSearch.trendingTitle;
+
                         bloc.add(GetTrendingMoviesEvent());
+
                         FocusScope.of(context).unfocus();
                       },
                     ),
@@ -81,10 +84,23 @@ class _SearchMoviesState extends State<MoviesSearchScreen> {
                       borderRadius: BorderRadius.circular(8),
                     ),
                   ),
-                  onSubmitted: (query) => bloc.add(MoviesSearchEvent(query)),
+                  onSubmitted: (query) {
+                    title.value = AppStrings.movieSearch.searchTitle;
+
+                    bloc.add(MoviesSearchEvent(query));
+                  },
                 ),
 
-                SizedBox(height: 32),
+                SizedBox(height: 24),
+
+                ValueListenableBuilder<String>(
+                  valueListenable: title,
+                  builder: (context, value, child) {
+                    return Text(title.value);
+                  },
+                ),
+
+                SizedBox(height: 24),
 
                 BlocBuilder<MoviesSearchBloc, MoviesSearchState>(
                   bloc: bloc,
@@ -146,13 +162,14 @@ class _SearchMoviesState extends State<MoviesSearchScreen> {
     final movie = movies?[index];
     if (movie == null) return SizedBox();
 
-    final url = movie.getImageUrl(size: "w154", path: movie.posterPath);
+    final url = movie.getImageUrl(
+      size: AppStrings.imageSizes.posterLarge,
+      path: movie.posterPath,
+    );
 
     return GestureDetector(
-      onTap: () => Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => MovieDetailsScreen(movie)),
-      ),
+      onTap: () =>
+          Navigator.pushNamed(context, '/movie_details', arguments: movie),
       child: url != null && url.isNotEmpty
           ? CachedNetworkImage(
               imageUrl: url,
