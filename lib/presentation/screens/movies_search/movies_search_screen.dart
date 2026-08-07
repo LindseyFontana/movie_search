@@ -42,13 +42,21 @@ class _SearchMoviesState extends State<MoviesSearchScreen> {
         child: Scaffold(
           appBar: AppBar(
             title: Text(AppStrings.title),
+
             actions: [
-              TextButton(
-                onPressed: () => Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => CreditsScreen()),
+              Padding(
+                padding: const EdgeInsets.fromLTRB(0, 0, 8, 16),
+                child: InkWell(
+                  onTap: () => Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => CreditsScreen()),
+                  ),
+                  customBorder: const CircleBorder(),
+                  child: Text(
+                    AppStrings.movieSearch.ellipsis,
+                    style: TextStyle(fontSize: 30),
+                  ),
                 ),
-                child: Text("...", style: TextStyle(fontSize: 30)),
               ),
             ],
           ),

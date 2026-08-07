@@ -10,7 +10,7 @@ class CreditsScreen extends StatelessWidget {
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
-          title: Center(child: Text(AppStrings.title)),
+          title: Text(AppStrings.credits.title),
           leading: InkWell(
             onTap: () => Navigator.pop(context),
             customBorder: const CircleBorder(),
@@ -24,13 +24,13 @@ class CreditsScreen extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Text(
-                'Aplicação desenvolvida por: \nLindsey Oliva Fontana Schmitz',
+                AppStrings.credits.author,
                 style: TextStyle(fontSize: 20),
                 textAlign: TextAlign.center,
               ),
               SizedBox(height: 32),
               Text(
-                'Este produto usa a API do TMDB, mas não é endossado nem certificado pelo TMDB.',
+                AppStrings.credits.tmdbCredits,
                 style: TextStyle(fontSize: 14),
                 textAlign: TextAlign.center,
               ),
