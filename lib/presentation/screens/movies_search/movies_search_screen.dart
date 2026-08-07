@@ -40,6 +40,8 @@ class _SearchMoviesState extends State<MoviesSearchScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final textStyle = Theme.of(context).textTheme;
+
     return SafeArea(
       child: GestureDetector(
         onTap: () => FocusScope.of(context).unfocus(),
@@ -56,7 +58,7 @@ class _SearchMoviesState extends State<MoviesSearchScreen> {
                   padding: const EdgeInsets.fromLTRB(8, 0, 8, 16),
                   child: Text(
                     AppStrings.movieSearch.ellipsis,
-                    style: TextStyle(fontSize: AppSizes.font.title),
+                    style: textStyle.titleLarge,
                   ),
                 ),
               ),
@@ -99,10 +101,7 @@ class _SearchMoviesState extends State<MoviesSearchScreen> {
                 ValueListenableBuilder<String>(
                   valueListenable: title,
                   builder: (context, value, child) {
-                    return Text(
-                      title.value,
-                      style: TextStyle(fontSize: AppSizes.font.subtitle),
-                    );
+                    return Text(value, style: textStyle.bodyLarge);
                   },
                 ),
 
@@ -123,6 +122,8 @@ class _SearchMoviesState extends State<MoviesSearchScreen> {
 
   Widget _buildBody(MoviesSearchState state) {
     final paginatedMovies = state.paginatedMovies;
+
+    final textStyle = Theme.of(context).textTheme;
 
     if (state is SuccessState || state is LoadingMoreMoviesState) {
       return paginatedMovies != null && paginatedMovies.movies.isNotEmpty
@@ -155,7 +156,7 @@ class _SearchMoviesState extends State<MoviesSearchScreen> {
               padding: EdgeInsets.only(top: AppSizes.padding.large),
               child: Text(
                 AppStrings.movieSearch.emptyList,
-                style: TextStyle(fontSize: AppSizes.font.subtitle),
+                style: textStyle.titleLarge,
               ),
             );
     }

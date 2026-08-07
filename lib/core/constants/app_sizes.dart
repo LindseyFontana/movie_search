@@ -7,11 +7,11 @@ class AppSizes {
 class _Font {
   const _Font();
 
-  final double title = 24;
+  final double titleLarge = 24;
   final double titleSmall = 20;
 
-  final double subtitle = 16;
-  final double subtitleSmall = 14;
+  final double bodyLarge = 16;
+  final double bodySmall = 14;
 }
 
 class _Spacing {

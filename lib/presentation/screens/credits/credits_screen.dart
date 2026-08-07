@@ -10,6 +10,8 @@ class CreditsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final textStyle = Theme.of(context).textTheme;
+
     return SafeArea(
       child: Scaffold(
         appBar: CustomAppBar(
@@ -24,13 +26,14 @@ class CreditsScreen extends StatelessWidget {
             children: [
               Text(
                 AppStrings.credits.author,
-                style: TextStyle(fontSize: AppSizes.font.title),
+                style: textStyle.titleLarge,
+
                 textAlign: TextAlign.center,
               ),
               SizedBox(height: AppSizes.spacing.large),
               Text(
                 AppStrings.credits.tmdbCredits,
-                style: TextStyle(fontSize: AppSizes.font.subtitleSmall),
+                style: textStyle.bodyLarge,
                 textAlign: TextAlign.center,
               ),
               SizedBox(height: AppSizes.spacing.smallest),

@@ -14,12 +14,14 @@ class CustomErrorWidget extends StatelessWidget {
         icon: Icons.signal_wifi_off,
         title: AppStrings.errors.connectionTitle,
         subtitle: AppStrings.errors.connectionSubtitle,
+        context: context,
       ),
       ErrorType.api => _buildError(
         title: AppStrings.errors.apiTitle,
         subtitle: AppStrings.errors.apiSubtitle,
+        context: context,
       ),
-      _ => _buildError(title: AppStrings.errors.genericTitle),
+      _ => _buildError(title: AppStrings.errors.genericTitle, context: context),
     };
   }
 
@@ -27,20 +29,24 @@ class CustomErrorWidget extends StatelessWidget {
     IconData? icon,
     required String title,
     String? subtitle,
-  }) => Center(
-    child: Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Icon(
-          icon ?? Icons.error_outline,
-          size: 80,
-          color: const Color.fromRGBO(161, 45, 36, 1),
-        ),
-        SizedBox(height: AppSizes.spacing.small),
-        Text(title, style: TextStyle(fontSize: AppSizes.font.title)),
-        if (subtitle != null)
-          Text(subtitle, style: TextStyle(fontSize: AppSizes.font.subtitle)),
-      ],
-    ),
-  );
+    required BuildContext context,
+  }) {
+    final textStyle = Theme.of(context).textTheme;
+
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(
+            icon ?? Icons.error_outline,
+            size: 80,
+            color: const Color.fromRGBO(161, 45, 36, 1),
+          ),
+          SizedBox(height: AppSizes.spacing.small),
+          Text(title, style: textStyle.titleLarge),
+          if (subtitle != null) Text(subtitle, style: textStyle.bodyLarge),
+        ],
+      ),
+    );
+  }
 }

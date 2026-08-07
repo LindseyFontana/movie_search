@@ -4,7 +4,6 @@ import 'package:movie_search/core/constants/app_sizes.dart';
 import 'package:movie_search/domain/entities/movie.dart';
 import 'package:movie_search/presentation/extensions/movie_extension.dart';
 import 'package:movie_search/presentation/screens/widgets/back_button_widget.dart';
-import 'package:movie_search/presentation/screens/widgets/back_button_widgetdart';
 import 'package:movie_search/presentation/screens/widgets/default_text.dart';
 
 class MovieDetailsScreen extends StatelessWidget {
@@ -15,6 +14,8 @@ class MovieDetailsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final mediaQuery = MediaQuery.sizeOf(context);
+
+    final textStyle = Theme.of(context).textTheme;
 
     return SafeArea(
       child: Scaffold(
@@ -48,7 +49,7 @@ class MovieDetailsScreen extends StatelessWidget {
                           movie.title,
                           maxLines: 2,
                           overflow: TextOverflow.ellipsis,
-                          style: TextStyle(fontSize: AppSizes.font.title),
+                          style: textStyle.titleLarge,
                         ),
                       ),
 
@@ -64,10 +65,7 @@ class MovieDetailsScreen extends StatelessWidget {
                     ],
                   ),
                   SizedBox(height: AppSizes.spacing.medium),
-                  Text(
-                    movie.overview,
-                    style: TextStyle(fontSize: AppSizes.font.subtitle),
-                  ),
+                  Text(movie.overview, style: textStyle.bodyLarge),
                 ],
               ),
             ),

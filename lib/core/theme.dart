@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:movie_search/core/constants/app_sizes.dart';
 
 final ThemeData darkTheme = ThemeData(
   useMaterial3: true,
@@ -12,5 +13,11 @@ final ThemeData darkTheme = ThemeData(
     onSecondary: Colors.black,
     onSurface: Colors.white,
     onSurfaceVariant: Color(0xFFB3B3B3),
+  ),
+  textTheme: TextTheme(
+    titleLarge: TextStyle(fontSize: AppSizes.font.titleLarge),
+    titleSmall: TextStyle(fontSize: AppSizes.font.titleSmall),
+    bodyLarge: TextStyle(fontSize: AppSizes.font.bodyLarge),
+    bodyMedium: TextStyle(fontSize: AppSizes.font.bodySmall),
   ),
 );
