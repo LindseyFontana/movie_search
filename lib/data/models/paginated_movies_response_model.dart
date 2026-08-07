@@ -1,11 +1,15 @@
 import 'package:movie_search/data/models/movie_response_model.dart';
 import 'package:movie_search/domain/entities/paginated_movies.dart';
 
-class PaginatedMoviesResponseModel extends PaginatedMovies {
+class PaginatedMoviesResponseModel {
+  final int page;
+  final int totalPages;
+  final List<MovieResponseModel> movies;
+
   const PaginatedMoviesResponseModel({
-    required super.page,
-    required super.movies,
-    required super.totalPages,
+    required this.page,
+    required this.movies,
+    required this.totalPages,
   });
 
   factory PaginatedMoviesResponseModel.fromJson(Map<String, dynamic> json) {
@@ -43,4 +47,10 @@ class PaginatedMoviesResponseModel extends PaginatedMovies {
         .map((movie) => MovieResponseModel.toJson(movie))
         .toList(),
   };
+
+  PaginatedMovies toEntity() => PaginatedMovies(
+    page: page,
+    totalPages: totalPages,
+    movies: movies.map((movie) => movie.toEntity()).toList(),
+  );
 }

@@ -29,7 +29,7 @@ class MovieDataSourceImpl implements MovieDataSource {
 
     final json = response.data as Map<String, dynamic>;
 
-    return PaginatedMoviesResponseModel.fromJson(json);
+    return PaginatedMoviesResponseModel.fromJson(json).toEntity();
   }
 
   @override
@@ -45,6 +45,6 @@ class MovieDataSourceImpl implements MovieDataSource {
 
     final json = response.data as Map<String, dynamic>;
 
-    return PaginatedMoviesResponseModel.fromJson(json);
+    return PaginatedMoviesResponseModel.fromJson(json).toEntity();
   }
 }
