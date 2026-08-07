@@ -8,6 +8,7 @@ import 'package:movie_search/di/dependecy_injection.dart';
 import 'package:movie_search/presentation/screens/movies_search/bloc/movies_search_bloc.dart';
 import 'package:movie_search/presentation/screens/widgets/custom_app_bar.dart';
 import 'package:movie_search/presentation/screens/widgets/custom_error_widget.dart';
+import 'package:movie_search/presentation/screens/widgets/default_text.dart';
 import 'package:movie_search/presentation/screens/widgets/endless_scrolling_widget.dart';
 
 class MoviesSearchScreen extends StatefulWidget {
@@ -198,17 +199,7 @@ class _SearchMoviesState extends State<MoviesSearchScreen> {
               ),
               errorWidget: (context, url, error) => Icon(Icons.error),
             )
-          : _buildDefault(movie.title),
-    );
-  }
-
-  Widget _buildDefault(String title) {
-    return Container(
-      decoration: const BoxDecoration(color: Color.fromARGB(255, 59, 58, 58)),
-      child: Padding(
-        padding: EdgeInsets.all(AppSizes.padding.smallest),
-        child: Center(child: Text(title)),
-      ),
+          : DefaultText(movie.title),
     );
   }
 }
