@@ -1,7 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:movie_search/core/constants/app_strings.dart';
 import 'package:movie_search/core/constants/app_sizes.dart';
 import 'package:movie_search/di/dependecy_injection.dart';
@@ -190,13 +189,7 @@ class _SearchMoviesState extends State<MoviesSearchScreen> {
                   color: Color.fromARGB(255, 59, 58, 58),
                 ),
               ),
-              cacheManager: CacheManager(
-                Config(
-                  'movies_app_cache_key',
-                  maxNrOfCacheObjects: 30,
-                  stalePeriod: const Duration(days: 5),
-                ),
-              ),
+              cacheManager: CustomCacheManager.instance,
               errorWidget: (context, url, error) => Icon(Icons.error),
             )
           : DefaultText(movie.title),

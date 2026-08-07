@@ -24,7 +24,6 @@ class MoviesSearchBloc extends Bloc<MoviesEvent, MoviesSearchState> {
 
       result.fold((error) => emit(ErrorState(error)), (trendingMovies) {
         emit(SuccessState(paginetedMovies: trendingMovies));
-        return;
       });
     });
 
@@ -46,7 +45,6 @@ class MoviesSearchBloc extends Bloc<MoviesEvent, MoviesSearchState> {
             ),
           ),
         );
-        return;
       });
     }, transformer: droppable());
 
@@ -90,7 +88,6 @@ class MoviesSearchBloc extends Bloc<MoviesEvent, MoviesSearchState> {
             query: event.query,
           ),
         );
-        return;
       });
     }, transformer: droppable());
   }
@@ -116,6 +113,6 @@ class MoviesSearchBloc extends Bloc<MoviesEvent, MoviesSearchState> {
   }
 
   int _getNextPage(PaginetedMovies? currentPage) {
-    return currentPage?.page != null ? currentPage!.page + 1 : _firstPage;
+    return currentPage != null ? currentPage.page + 1 : _firstPage;
   }
 }
