@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:movie_search/core/constants/app_strings.dart';
 import 'package:movie_search/core/theme.dart';
 import 'package:movie_search/di/dependecy_injection.dart';
 import 'package:movie_search/domain/entities/movie.dart';
@@ -18,11 +19,11 @@ class MainApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       theme: dartTheme,
-      initialRoute: '/',
+      initialRoute: AppStrings.routes.home,
       routes: {
-        '/': (context) => MoviesSearchScreen(),
-        '/credits': (context) => CreditsScreen(),
-        '/movie_details': (context) {
+        AppStrings.routes.home: (context) => MoviesSearchScreen(),
+        AppStrings.routes.credits: (context) => CreditsScreen(),
+        AppStrings.routes.movieDetails: (context) {
           final args = ModalRoute.of(context)!.settings.arguments as Movie;
 
           return MovieDetailsScreen(args);

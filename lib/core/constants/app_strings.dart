@@ -3,6 +3,7 @@ class AppStrings {
 
   static const errors = _AppErrors();
   static const imageSizes = _ImageSizes();
+  static const routes = _RouteNames();
   static const movieSearch = _MovieSearchScreen();
   static const credits = _CreditsScreen();
 }
@@ -38,6 +39,14 @@ class _ImageSizes {
   final posterLarge = "w154";
   final posterSmall = "w92";
   final backDrop = "w780";
+}
+
+class _RouteNames {
+  const _RouteNames();
+
+  final home = "/";
+  final credits = "/credits";
+  final movieDetails = "/movie_details";
 }
 
 class _CreditsScreen {

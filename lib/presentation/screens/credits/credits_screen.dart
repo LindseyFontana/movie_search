@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:movie_search/core/constants/app_strings.dart';
 import 'package:movie_search/core/constants/app_sizes.dart';
+import 'package:movie_search/presentation/screens/widgets/back_buttom.dart';
+import 'package:movie_search/presentation/screens/widgets/custom_app_bar.dart';
 
 class CreditsScreen extends StatelessWidget {
   const CreditsScreen({super.key});
@@ -10,16 +12,9 @@ class CreditsScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        appBar: AppBar(
-          title: Text(
-            AppStrings.credits.title,
-            style: TextStyle(fontSize: AppSizes.font.titleSmall),
-          ),
-          leading: InkWell(
-            onTap: () => Navigator.pop(context),
-            customBorder: const CircleBorder(),
-            child: const Icon(Icons.arrow_back_ios, color: Colors.white),
-          ),
+        appBar: CustomAppBar(
+          title: AppStrings.credits.title,
+          leading: BackButtom(hasShadow: false),
         ),
         body: Padding(
           padding: EdgeInsets.all(AppSizes.padding.medium),
