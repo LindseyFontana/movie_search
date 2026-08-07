@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:movie_search/core/constants/app_strings.dart';
 import 'package:movie_search/main.dart';
+import 'package:movie_search/presentation/screens/credits/credits_screen.dart';
 import 'package:movie_search/presentation/screens/movie_details/movie_details_screen.dart';
 import 'package:movie_search/presentation/screens/movies_search/bloc/movies_search_bloc.dart';
 import 'package:movie_search/presentation/screens/widgets/custom_error_widget.dart';
@@ -39,7 +40,26 @@ class _SearchMoviesState extends State<MoviesSearchScreen> {
       child: GestureDetector(
         onTap: () => FocusScope.of(context).unfocus(),
         child: Scaffold(
-          appBar: AppBar(title: Center(child: Text(AppStrings.title))),
+          appBar: AppBar(
+            title: Text(AppStrings.title),
+
+            actions: [
+              Padding(
+                padding: const EdgeInsets.fromLTRB(0, 0, 8, 16),
+                child: InkWell(
+                  onTap: () => Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => CreditsScreen()),
+                  ),
+                  customBorder: const CircleBorder(),
+                  child: Text(
+                    AppStrings.movieSearch.ellipsis,
+                    style: TextStyle(fontSize: 30),
+                  ),
+                ),
+              ),
+            ],
+          ),
           body: Padding(
             padding: EdgeInsets.all(16),
             child: Column(

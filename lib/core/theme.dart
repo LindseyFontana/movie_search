@@ -4,6 +4,7 @@ final ThemeData dartTheme = ThemeData(
   useMaterial3: true,
   brightness: Brightness.dark,
   scaffoldBackgroundColor: const Color(0xFF121212),
+  appBarTheme: const AppBarTheme(centerTitle: true),
   colorScheme: const ColorScheme.dark(
     surface: Color(0xFF1E1E1E),
     primary: Colors.white,

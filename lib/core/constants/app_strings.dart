@@ -2,7 +2,9 @@ class AppStrings {
   static const title = 'Filmes';
 
   static const errors = _AppErrors();
+  static const imageSizes = _ImageSizes();
   static const movieSearch = _MovieSearchScreen();
+  static const credits = _CreditsScreen();
 }
 
 class _AppErrors {
@@ -24,4 +26,22 @@ class _MovieSearchScreen {
   final hintText = 'Digite o título do filme';
 
   final emptyList = 'Filmes não encontrados';
+  final ellipsis = "...";
+}
+
+class _ImageSizes {
+  const _ImageSizes();
+
+  final posterLarge = "w154";
+  final posterSmall = "w92";
+  final backDrop = "w780";
+}
+
+class _CreditsScreen {
+  const _CreditsScreen();
+
+  final title = "Sobre";
+  final author = "Aplicação desenvolvida por: \nLindsey Oliva Fontana Schmitz";
+  final tmdbCredits =
+      "Este produto usa a API do TMDB, mas não é endossado nem certificado pelo TMDB.";
 }
