@@ -1,6 +1,8 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:movie_search/core/constants/app_strings.dart';
 import 'package:movie_search/core/constants/app_sizes.dart';
+import 'package:movie_search/di/dependency_injection.dart';
 import 'package:movie_search/domain/entities/movie.dart';
 import 'package:movie_search/presentation/extensions/movie_extension.dart';
 import 'package:movie_search/presentation/screens/widgets/back_button_widget.dart';
@@ -84,21 +86,17 @@ class MovieDetailsScreen extends StatelessWidget {
     final url = movie.getImageUrl(size: size, path: path);
 
     return url != null && url.isNotEmpty
-        ? Image.network(
-            url,
-            frameBuilder: (context, child, frame, wasSynchronouslyLoaded) {
-              if (wasSynchronouslyLoaded) return child;
-
-              if (frame != null) return child;
-
-              return Container(
-                height: loaderHeight,
-                width: loaderWidth,
-                decoration: const BoxDecoration(
-                  color: Color.fromARGB(255, 59, 58, 58),
-                ),
-              );
-            },
+        ? CachedNetworkImage(
+            imageUrl: url,
+            cacheManager: CustomCacheManager.instance,
+            placeholder: (context, url) => Container(
+              height: loaderHeight,
+              width: loaderWidth,
+              decoration: const BoxDecoration(
+                color: Color.fromARGB(255, 59, 58, 58),
+              ),
+            ),
+            errorWidget: (context, url, error) => Icon(Icons.error),
           )
         : DefaultText(movie.title, height: loaderHeight, width: loaderWidth);
   }

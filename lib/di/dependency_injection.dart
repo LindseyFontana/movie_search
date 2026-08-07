@@ -36,7 +36,7 @@ void setupLocator() {
     () => SearchMoviesUseCase(getIt<MoviesRepositoryImpl>()),
   );
 
-  getIt.registerLazySingleton<MoviesSearchBloc>(
+  getIt.registerFactory<MoviesSearchBloc>(
     () => MoviesSearchBloc(
       getIt<GetTrendingMoviesUseCase>(),
       getIt<SearchMoviesUseCase>(),

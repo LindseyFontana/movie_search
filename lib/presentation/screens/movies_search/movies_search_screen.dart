@@ -20,21 +20,20 @@ class MoviesSearchScreen extends StatefulWidget {
 
 class _SearchMoviesState extends State<MoviesSearchScreen> {
   final TextEditingController _inputTextController = TextEditingController();
-
-  final bloc = getIt<MoviesSearchBloc>();
-
-  final title = ValueNotifier<String>(AppStrings.movieSearch.trendingTitle);
+  late final MoviesSearchBloc bloc;
 
   @override
   void initState() {
+    bloc = context.read<MoviesSearchBloc>();
+
     bloc.add(GetTrendingMoviesEvent());
+
     super.initState();
   }
 
   @override
   void dispose() {
     _inputTextController.dispose();
-    title.dispose();
     super.dispose();
   }
 
@@ -67,7 +66,6 @@ class _SearchMoviesState extends State<MoviesSearchScreen> {
           body: Padding(
             padding: EdgeInsets.all(AppSizes.padding.medium),
             child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 TextField(
                   controller: _inputTextController,
@@ -78,7 +76,6 @@ class _SearchMoviesState extends State<MoviesSearchScreen> {
                       icon: Icon(Icons.clear),
                       onPressed: () {
                         _inputTextController.text = "";
-                        title.value = AppStrings.movieSearch.trendingTitle;
 
                         bloc.add(GetTrendingMoviesEvent());
 
@@ -90,27 +87,32 @@ class _SearchMoviesState extends State<MoviesSearchScreen> {
                     ),
                   ),
                   onSubmitted: (query) {
-                    title.value = AppStrings.movieSearch.searchTitle;
-
-                    bloc.add(MoviesSearchEvent(query));
+                    bloc.add(SearchMoviesEvent(query));
                   },
                 ),
 
                 SizedBox(height: AppSizes.spacing.medium),
 
-                ValueListenableBuilder<String>(
-                  valueListenable: title,
-                  builder: (context, value, child) {
-                    return Text(value, style: textStyle.bodyLarge);
-                  },
-                ),
-
-                SizedBox(height: AppSizes.spacing.small),
-
                 BlocBuilder<MoviesSearchBloc, MoviesSearchState>(
-                  bloc: bloc,
-                  builder: (context, state) =>
-                      Expanded(child: _buildBody(state)),
+                  builder: (context, state) {
+                    final isSearching =
+                        state.query != null && state.query!.isNotEmpty;
+
+                    final subtitle = isSearching
+                        ? AppStrings.movieSearch.searchTitle
+                        : AppStrings.movieSearch.trendingTitle;
+
+                    return Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(subtitle, style: textStyle.bodyLarge),
+                          SizedBox(height: AppSizes.spacing.small),
+                          Expanded(child: _buildBody(state)),
+                        ],
+                      ),
+                    );
+                  },
                 ),
               ],
             ),
@@ -168,7 +170,11 @@ class _SearchMoviesState extends State<MoviesSearchScreen> {
   }
 
   Widget _buildMoviePoster(BuildContext context, int index) {
-    final movies = bloc.state.paginatedMovies?.movies;
+    final movies = context
+        .read<MoviesSearchBloc>()
+        .state
+        .paginatedMovies
+        ?.movies;
     final movie = movies?[index];
     if (movie == null) return SizedBox.shrink();
 
