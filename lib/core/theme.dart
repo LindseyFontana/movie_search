@@ -6,7 +6,6 @@ final ThemeData dartTheme = ThemeData(
   scaffoldBackgroundColor: const Color(0xFF121212),
   colorScheme: const ColorScheme.dark(
     surface: Color(0xFF1E1E1E),
-    error: Color(0xFFD32F2F),
     primary: Colors.white,
     onPrimary: Colors.white,
     onSecondary: Colors.black,

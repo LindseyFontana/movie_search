@@ -4,9 +4,20 @@ import 'package:movie_search/main.dart';
 import 'package:movie_search/presentation/screens/movies_search/bloc/movies_search_bloc.dart';
 
 class EndlessScrolling extends StatefulWidget {
-  const EndlessScrolling({super.key, required this.paginatedMovies});
+  const EndlessScrolling({
+    super.key,
+    required this.paginatedMovies,
+    required this.itemBuilder,
+    required this.loadMoreItems,
+    required this.itemCount,
+    required this.isLoading,
+  });
 
   final PaginetedMovies paginatedMovies;
+  final Widget? Function(BuildContext, int) itemBuilder;
+  final void Function() loadMoreItems;
+  final bool isLoading;
+  final int itemCount;
 
   @override
   State<StatefulWidget> createState() => _EndlessScrollingState();
@@ -18,7 +29,7 @@ class _EndlessScrollingState extends State<EndlessScrolling> {
 
   @override
   void initState() {
-    _scrollControler.addListener(_loadMoreMovies);
+    _scrollControler.addListener(_onLoadMore);
     super.initState();
   }
 
@@ -28,48 +39,28 @@ class _EndlessScrollingState extends State<EndlessScrolling> {
     super.dispose();
   }
 
-  void _loadMoreMovies() {
-    if (_scrollControler.position.pixels >=
-        (_scrollControler.position.maxScrollExtent -
-            (_scrollControler.position.pixels / 1.5))) {
-      final paginetedMovies = bloc.state.paginetedMovies;
+  void _onLoadMore() {
+    if (!_scrollControler.hasClients) return;
 
-      final isSearchingMovies =
-          bloc.state.query != null && bloc.state.query!.isNotEmpty;
+    final scrollPosition = _scrollControler.offset;
 
-      if (paginetedMovies != null &&
-          paginetedMovies.page < paginetedMovies.totalPages) {
-        if (isSearchingMovies) {
-          bloc.add(
-            SearchMoreMoviesEvent(
-              bloc.state.query!,
-              bloc.state.paginetedMovies,
-            ),
-          );
-        } else {
-          bloc.add(LoadMoreTrendingMoviesEvent(bloc.state.paginetedMovies));
-        }
-      }
-    }
+    final maxScroll = _scrollControler.position.maxScrollExtent;
+
+    final shouldLoadMoreItems = scrollPosition >= (maxScroll / 1.5);
+
+    if (shouldLoadMoreItems) widget.loadMoreItems();
   }
 
   @override
   Widget build(BuildContext context) {
-    final movies = widget.paginatedMovies.movies;
-
     return Column(
       children: [
         Expanded(
           child: GridView.builder(
             controller: _scrollControler,
             physics: ClampingScrollPhysics(),
-            itemCount: movies.length,
-            itemBuilder: (BuildContext context, int index) {
-              return _buildMoviePoster(
-                title: movies[index].title,
-                url: movies[index].posterPath,
-              );
-            },
+            itemCount: widget.itemCount,
+            itemBuilder: widget.itemBuilder,
             gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
               crossAxisCount: 3,
               childAspectRatio: 0.67,
@@ -78,41 +69,10 @@ class _EndlessScrollingState extends State<EndlessScrolling> {
             ),
           ),
         ),
-        if (bloc.state is LoadingMoreMoviesState) ...[
+        if (widget.isLoading) ...[
           CircularProgressIndicator(padding: EdgeInsets.only(top: 16)),
         ],
       ],
-    );
-  }
-
-  Widget _buildMoviePoster({required String title, String? url}) {
-    return url != null && url.isNotEmpty
-        ? Image.network(
-            url,
-            frameBuilder: (context, child, frame, wasSynchronouslyLoaded) {
-              //TODO: habilitar quando salvar imagens em cache, irá recuperá-las
-              // if (wasSynchronouslyLoaded) return child;
-              if (frame != null) return child;
-
-              return Container(
-                decoration: const BoxDecoration(
-                  color: Color.fromARGB(255, 59, 58, 58),
-                ),
-              );
-            },
-          )
-        : _buildDefault(title);
-  }
-
-  Widget _buildDefault(String title) {
-    return Expanded(
-      child: Container(
-        decoration: const BoxDecoration(color: Color.fromARGB(255, 59, 58, 58)),
-        child: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Center(child: Text(title)),
-        ),
-      ),
     );
   }
 }

@@ -8,12 +8,14 @@ environment:
 
 dependencies:
   bloc_concurrency: ^0.3.0
+  cached_network_image: ^3.4.1
   dio: ^5.11.0
   either_dart: ^1.0.0
   equatable: ^2.1.0
   flutter:
     sdk: flutter
   flutter_bloc: ^9.1.1
+  flutter_cache_manager: ^3.4.2
   get_it: ^9.2.1
   internet_connection_checker_plus: ^3.1.1
 

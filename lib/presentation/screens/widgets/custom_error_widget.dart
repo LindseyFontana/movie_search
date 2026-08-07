@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:movie_search/core/constants/app_strings.dart';
 import 'package:movie_search/core/errors.dart';
 
 class CustomErrorWidget extends StatelessWidget {
@@ -11,14 +12,14 @@ class CustomErrorWidget extends StatelessWidget {
       child: switch (error.type) {
         ErrorType.connection => _buildError(
           icon: Icons.signal_wifi_off,
-          title: 'Erro de conexão!',
-          subtitle: 'Confira sua conexão e tente novamente.',
+          title: AppStrings.errors.connectionTitle,
+          subtitle: AppStrings.errors.connectionSubtitle,
         ),
         ErrorType.api => _buildError(
-          title: 'Ocorreu um erro!',
-          subtitle: 'Tente novamente.',
+          title: AppStrings.errors.apiTitle,
+          subtitle: AppStrings.errors.apiSubtitle,
         ),
-        _ => _buildError(title: 'Ocorreu um erro!'),
+        _ => _buildError(title: AppStrings.errors.genericTitle),
       },
     );
   }
