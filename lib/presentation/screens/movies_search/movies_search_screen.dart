@@ -189,6 +189,7 @@ class _SearchMoviesState extends State<MoviesSearchScreen> {
       ),
       child: MovieImageWidget(
         movie: movie,
+        path: movie.posterPath,
         size: AppStrings.imageSizes.posterLarge,
       ),
     );
