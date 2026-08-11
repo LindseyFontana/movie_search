@@ -4,7 +4,7 @@ import 'package:mocktail/mocktail.dart';
 import 'package:movie_search/core/errors.dart';
 import 'package:movie_search/data/data_source/remote/http_service.dart';
 
-class MockDio extends Mock implements Dio {}
+import '../../../mocks.dart';
 
 void main() {
   late MockDio dio;

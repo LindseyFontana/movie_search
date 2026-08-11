@@ -5,16 +5,24 @@ import 'package:movie_search/domain/entities/paginated_movies.dart';
 void main() {
   const paginationValues = {'page': 1, 'total_pages': 1};
 
-  final paginatedMoviesJson = {
-    'page': 2,
-    'total_pages': 50,
+  const page = 2;
+  const totalPages = 50;
+  const movieId = 10;
+  const movieTitle = 'Movie Ten';
+  const movieOverview = 'Overview ten';
+  const moviePosterPath = '/poster10.jpg';
+  const movieBackdropPath = '/backdrop10.jpg';
+
+  const paginatedMoviesJson = {
+    'page': page,
+    'total_pages': totalPages,
     'results': [
       {
-        'id': 10,
-        'title': 'Movie Ten',
-        'overview': 'Overview ten',
-        'poster_path': '/poster10.jpg',
-        'backdrop_path': '/backdrop10.jpg',
+        'id': movieId,
+        'title': movieTitle,
+        'overview': movieOverview,
+        'poster_path': moviePosterPath,
+        'backdrop_path': movieBackdropPath,
       },
     ],
   };
@@ -23,14 +31,14 @@ void main() {
     test('maps all attributes correctly', () {
       final model = PaginatedMoviesResponseModel.fromJson(paginatedMoviesJson);
 
-      expect(model.page, 2);
-      expect(model.totalPages, 50);
+      expect(model.page, page);
+      expect(model.totalPages, totalPages);
       expect(model.movies, hasLength(1));
-      expect(model.movies.first.id, 10);
-      expect(model.movies.first.title, 'Movie Ten');
-      expect(model.movies.first.overview, 'Overview ten');
-      expect(model.movies.first.posterPath, '/poster10.jpg');
-      expect(model.movies.first.backdropPath, '/backdrop10.jpg');
+      expect(model.movies.first.id, movieId);
+      expect(model.movies.first.title, movieTitle);
+      expect(model.movies.first.overview, movieOverview);
+      expect(model.movies.first.posterPath, moviePosterPath);
+      expect(model.movies.first.backdropPath, movieBackdropPath);
     });
 
     test('filters out movies with empty title or overview', () {
@@ -72,30 +80,26 @@ void main() {
     });
   });
 
-  group('toJson', () {
-    test('serializes correctly', () {
-      final entity = PaginatedMoviesResponseModel.fromJson(
-        paginatedMoviesJson,
-      ).toEntity();
+  test('toJson: serializes correctly', () {
+    final entity = PaginatedMoviesResponseModel.fromJson(
+      paginatedMoviesJson,
+    ).toEntity();
 
-      expect(
-        PaginatedMoviesResponseModel.toJson(entity),
-        equals(paginatedMoviesJson),
-      );
-    });
+    expect(
+      PaginatedMoviesResponseModel.toJson(entity),
+      equals(paginatedMoviesJson),
+    );
   });
 
-  group('toEntity', () {
-    test('converts to PaginatedMovies entity with same values', () {
-      final entity = PaginatedMoviesResponseModel.fromJson(
-        paginatedMoviesJson,
-      ).toEntity();
+  test('toEntity: converts to PaginatedMovies entity with same values', () {
+    final entity = PaginatedMoviesResponseModel.fromJson(
+      paginatedMoviesJson,
+    ).toEntity();
 
-      expect(entity, isA<PaginatedMovies>());
-      expect(entity.page, 2);
-      expect(entity.totalPages, 50);
-      expect(entity.movies, hasLength(1));
-      expect(entity.movies.first.id, 10);
-    });
+    expect(entity, isA<PaginatedMovies>());
+    expect(entity.page, page);
+    expect(entity.totalPages, totalPages);
+    expect(entity.movies, hasLength(1));
+    expect(entity.movies.first.id, movieId);
   });
 }

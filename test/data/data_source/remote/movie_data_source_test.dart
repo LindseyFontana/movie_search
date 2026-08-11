@@ -1,10 +1,9 @@
 import 'package:dio/dio.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
-import 'package:movie_search/data/data_source/remote/http_service.dart';
 import 'package:movie_search/data/data_source/remote/movie_data_source.dart';
 
-class MockHttpService extends Mock implements HttpService {}
+import '../../../mocks.dart';
 
 Response<dynamic> buildResponse(Map<String, dynamic> data) => Response<dynamic>(
   data: data,
@@ -18,6 +17,11 @@ void main() {
 
   const page = 5;
   const totalPage = 10;
+  const queryParameters = {
+    'language': 'pt-BR',
+    'include_adult': false,
+    'page': page,
+  };
 
   setUp(() {
     httpService = MockHttpService();
@@ -45,11 +49,7 @@ void main() {
       verify(
         () => httpService.request(
           path: 'https://api.themoviedb.org/3/trending/movie/week',
-          queryParameters: {
-            'language': 'pt-BR',
-            'include_adult': false,
-            'page': page,
-          },
+          queryParameters: queryParameters,
           options: any(named: 'options'),
         ),
       ).called(1);
@@ -84,8 +84,8 @@ void main() {
   });
 
   group('searchMovies', () {
-    const title = 'Search Result';
-    const query = 'inception';
+    const title = 'title';
+    const query = 'query';
 
     test('requests the search movies endpoint with query and page', () async {
       stubRequest(
@@ -97,12 +97,7 @@ void main() {
       verify(
         () => httpService.request(
           path: 'https://api.themoviedb.org/3/search/movie',
-          queryParameters: {
-            'language': 'pt-BR',
-            'include_adult': false,
-            'page': page,
-            'query': query,
-          },
+          queryParameters: {...queryParameters, 'query': query},
           options: any(named: 'options'),
         ),
       ).called(1);
