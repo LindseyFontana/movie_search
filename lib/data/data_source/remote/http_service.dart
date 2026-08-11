@@ -32,12 +32,17 @@ class HttpService {
       );
     } on DioException catch (error) {
       switch (error.type) {
-        case DioExceptionType.connectionTimeout:
-        case DioExceptionType.sendTimeout:
-        case DioExceptionType.receiveTimeout:
         case DioExceptionType.connectionError:
           throw ConnectionError(
             message: error.toString(),
+            stackTrace: error.stackTrace,
+          );
+        case DioExceptionType.connectionTimeout:
+        case DioExceptionType.sendTimeout:
+        case DioExceptionType.receiveTimeout:
+          throw HttpError(
+            statusCode: error.response?.statusCode,
+            message: error.message,
             stackTrace: error.stackTrace,
           );
         default:
