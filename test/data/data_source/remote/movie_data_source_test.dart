@@ -1,7 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
-import 'package:movie_search/data/data_source/remote/movie_data_source.dart';
+import 'package:movie_search/data/data_source/remote/movie_data_source_impl.dart';
 
 import '../../../mocks.dart';
 

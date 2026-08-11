@@ -19,12 +19,18 @@ class MoviesSearchScreen extends StatefulWidget {
 class _SearchMoviesState extends State<MoviesSearchScreen> {
   final TextEditingController _inputTextController = TextEditingController();
   late final MoviesSearchBloc bloc;
+  MoviesEvent? _lastEvent;
+
+  void _dispatch(MoviesEvent event) {
+    _lastEvent = event;
+    bloc.add(event);
+  }
 
   @override
   void initState() {
     bloc = context.read<MoviesSearchBloc>();
 
-    bloc.add(GetTrendingMoviesEvent());
+    _dispatch(GetTrendingMoviesEvent());
 
     super.initState();
   }
@@ -76,7 +82,7 @@ class _SearchMoviesState extends State<MoviesSearchScreen> {
                       onPressed: () {
                         _inputTextController.text = "";
 
-                        bloc.add(GetTrendingMoviesEvent());
+                        _dispatch(GetTrendingMoviesEvent());
 
                         FocusScope.of(context).unfocus();
                       },
@@ -86,7 +92,7 @@ class _SearchMoviesState extends State<MoviesSearchScreen> {
                     ),
                   ),
                   onSubmitted: (query) {
-                    bloc.add(SearchMoviesEvent(query));
+                    _dispatch(SearchMoviesEvent(query));
                   },
                 ),
 
@@ -140,14 +146,14 @@ class _SearchMoviesState extends State<MoviesSearchScreen> {
 
                 if (paginatedMovies.page < paginatedMovies.totalPages) {
                   if (isSearchingMovies) {
-                    bloc.add(
+                    _dispatch(
                       SearchMoreMoviesEvent(
                         bloc.state.query!,
                         bloc.state.paginatedMovies,
                       ),
                     );
                   } else {
-                    bloc.add(
+                    _dispatch(
                       LoadMoreTrendingMoviesEvent(bloc.state.paginatedMovies),
                     );
                   }
@@ -164,7 +170,13 @@ class _SearchMoviesState extends State<MoviesSearchScreen> {
             );
     }
     if (state is ErrorState) {
-      return CustomErrorWidget(key: AppKeys.errorWidget, error: state.error);
+      return CustomErrorWidget(
+        key: AppKeys.errorWidget,
+        error: state.error,
+        onTryAgain: () {
+          if (_lastEvent != null) _dispatch(_lastEvent!);
+        },
+      );
     } else {
       return Center(
         child: CircularProgressIndicator(key: AppKeys.loadingIndicator),

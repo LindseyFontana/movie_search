@@ -18,6 +18,8 @@ class _AppErrors {
   final apiSubtitle = 'Tente novamente.';
 
   final genericTitle = 'Ocorreu um erro!';
+
+  final retryButton = 'Tentar novamente';
 }
 
 class _MovieSearchScreen {
