@@ -57,8 +57,8 @@ class MovieDetailsScreen extends StatelessWidget {
                         flex: 1,
                         child: MovieImageWidget(
                           movie: movie,
-                          loaderHeight: 150,
-                          loaderWidth: 100,
+                          loaderHeight: 135,
+                          loaderWidth: 90,
                           size: AppStrings.imageSizes.posterSmall,
                           path: movie.posterPath,
                         ),
