@@ -35,6 +35,10 @@ void main() {
 
   setUp(() => bloc = MockMoviesSearchBloc());
 
+  setUpAll(() {
+    registerFallbackValue(GetTrendingMoviesEvent());
+  });
+
   Future<void> pumpScreen(WidgetTester tester, MoviesSearchState state) async {
     whenListen(bloc, Stream.fromIterable([state]), initialState: initialState);
 
@@ -113,4 +117,21 @@ void main() {
     expect(find.byKey(AppKeys.errorWidget), findsOneWidget);
     expect(find.byType(CustomErrorWidget), findsOneWidget);
   });
+
+  testWidgets(
+    'when state is error, pressing try again re-dispatches last event',
+    (tester) async {
+      await pumpScreen(
+        tester,
+        ErrorState(const HttpError(message: 'api error', statusCode: 500)),
+      );
+
+      await tester.tap(find.byKey(AppKeys.errorRetryButton));
+      await tester.pump();
+
+      verify(
+        () => bloc.add(any(that: isA<GetTrendingMoviesEvent>())),
+      ).called(2);
+    },
+  );
 }
