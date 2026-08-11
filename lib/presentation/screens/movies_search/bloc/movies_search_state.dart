@@ -1,28 +1,36 @@
 part of 'movies_search_bloc.dart';
 
-sealed class MoviesSearchState {
+sealed class MoviesSearchState extends Equatable {
   final PaginatedMovies? paginatedMovies;
   final String? query;
 
-  MoviesSearchState({this.paginatedMovies, this.query});
+  const MoviesSearchState({this.paginatedMovies, this.query});
+
+  @override
+  List<Object?> get props => [paginatedMovies, query];
 }
 
-final class InitialState extends MoviesSearchState {}
+final class InitialState extends MoviesSearchState {
+  const InitialState();
+}
 
 final class LoadingState extends MoviesSearchState {
-  LoadingState();
+  const LoadingState();
 }
 
 final class LoadingMoreMoviesState extends MoviesSearchState {
-  LoadingMoreMoviesState({super.paginatedMovies, super.query});
+  const LoadingMoreMoviesState({super.paginatedMovies, super.query});
 }
 
 final class SuccessState extends MoviesSearchState {
-  SuccessState({super.paginatedMovies, super.query});
+  const SuccessState({super.paginatedMovies, super.query});
 }
 
 final class ErrorState extends MoviesSearchState {
   final Failure error;
 
-  ErrorState(this.error);
+  const ErrorState(this.error);
+
+  @override
+  List<Object?> get props => [error];
 }

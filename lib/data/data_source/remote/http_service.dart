@@ -6,18 +6,19 @@ class HttpService {
 
   final Dio _dio;
 
-  HttpService()
-    : _dio = Dio(
-        BaseOptions(
-          connectTimeout: const Duration(seconds: 15),
-          receiveTimeout: const Duration(seconds: 15),
-          sendTimeout: const Duration(seconds: 15),
-          headers: {
-            'accept': 'application/json',
-            'Authorization': 'Bearer $_token',
-          },
-        ),
-      );
+  HttpService({Dio? dio})
+    : _dio = dio ??
+          Dio(
+            BaseOptions(
+              connectTimeout: const Duration(seconds: 15),
+              receiveTimeout: const Duration(seconds: 15),
+              sendTimeout: const Duration(seconds: 15),
+              headers: {
+                'accept': 'application/json',
+                'Authorization': 'Bearer $_token',
+              },
+            ),
+          );
 
   Future<Response<dynamic>> request({
     required String path,
@@ -32,12 +33,17 @@ class HttpService {
       );
     } on DioException catch (error) {
       switch (error.type) {
-        case DioExceptionType.connectionTimeout:
-        case DioExceptionType.sendTimeout:
-        case DioExceptionType.receiveTimeout:
         case DioExceptionType.connectionError:
           throw ConnectionError(
             message: error.toString(),
+            stackTrace: error.stackTrace,
+          );
+        case DioExceptionType.connectionTimeout:
+        case DioExceptionType.sendTimeout:
+        case DioExceptionType.receiveTimeout:
+          throw HttpError(
+            statusCode: error.response?.statusCode,
+            message: error.message,
             stackTrace: error.stackTrace,
           );
         default:

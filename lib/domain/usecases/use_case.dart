@@ -16,21 +16,12 @@ class UseCase<T, Params> {
         return Right(response);
       }
 
-      return Left(
-        MissingResponseError(
-          message: 'Response is a null value',
-          type: ErrorType.unknown,
-        ),
-      );
+      return Left(MissingResponseError(message: 'Response is a null value'));
     } on Failure catch (error) {
       return Left(error);
     } catch (error, stackTrace) {
       return Left(
-        GenericError(
-          message: error.toString(),
-          stackTrace: stackTrace,
-          type: ErrorType.unknown,
-        ),
+        GenericError(message: error.toString(), stackTrace: stackTrace),
       );
     }
   }
