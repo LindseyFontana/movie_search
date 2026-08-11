@@ -1,15 +1,13 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:movie_search/core/constants/app_keys.dart';
 import 'package:movie_search/core/constants/app_strings.dart';
 import 'package:movie_search/core/constants/app_sizes.dart';
-import 'package:movie_search/di/dependency_injection.dart';
-import 'package:movie_search/presentation/extensions/movie_extension.dart';
 import 'package:movie_search/presentation/screens/movies_search/bloc/movies_search_bloc.dart';
 import 'package:movie_search/presentation/screens/widgets/custom_app_bar.dart';
 import 'package:movie_search/presentation/screens/widgets/custom_error_widget.dart';
-import 'package:movie_search/presentation/screens/widgets/default_text.dart';
 import 'package:movie_search/presentation/screens/widgets/endless_scrolling_widget.dart';
+import 'package:movie_search/presentation/screens/widgets/movie_image_widget.dart';
 
 class MoviesSearchScreen extends StatefulWidget {
   const MoviesSearchScreen({super.key});
@@ -68,6 +66,7 @@ class _SearchMoviesState extends State<MoviesSearchScreen> {
             child: Column(
               children: [
                 TextField(
+                  key: AppKeys.searchField,
                   controller: _inputTextController,
                   decoration: InputDecoration(
                     labelText: AppStrings.movieSearch.labelText,
@@ -130,6 +129,7 @@ class _SearchMoviesState extends State<MoviesSearchScreen> {
     if (state is SuccessState || state is LoadingMoreMoviesState) {
       return paginatedMovies != null && paginatedMovies.movies.isNotEmpty
           ? EndlessScrolling(
+              key: AppKeys.movieGrid,
               paginatedMovies: paginatedMovies,
               itemBuilder: _buildMoviePoster,
               itemCount: paginatedMovies.movies.length,
@@ -158,14 +158,17 @@ class _SearchMoviesState extends State<MoviesSearchScreen> {
               padding: EdgeInsets.only(top: AppSizes.padding.large),
               child: Text(
                 AppStrings.movieSearch.emptyList,
+                key: AppKeys.emptyListMessage,
                 style: textStyle.titleLarge,
               ),
             );
     }
     if (state is ErrorState) {
-      return CustomErrorWidget(error: state.error);
+      return CustomErrorWidget(key: AppKeys.errorWidget, error: state.error);
     } else {
-      return Center(child: CircularProgressIndicator());
+      return Center(
+        child: CircularProgressIndicator(key: AppKeys.loadingIndicator),
+      );
     }
   }
 
@@ -178,29 +181,16 @@ class _SearchMoviesState extends State<MoviesSearchScreen> {
     final movie = movies?[index];
     if (movie == null) return SizedBox.shrink();
 
-    final url = movie.getImageUrl(
-      size: AppStrings.imageSizes.posterLarge,
-      path: movie.posterPath,
-    );
-
     return GestureDetector(
       onTap: () => Navigator.pushNamed(
         context,
         AppStrings.routes.movieDetails,
         arguments: movie,
       ),
-      child: url != null && url.isNotEmpty
-          ? CachedNetworkImage(
-              imageUrl: url,
-              placeholder: (context, url) => Container(
-                decoration: const BoxDecoration(
-                  color: Color.fromARGB(255, 59, 58, 58),
-                ),
-              ),
-              cacheManager: CustomCacheManager.instance,
-              errorWidget: (context, url, error) => Icon(Icons.error),
-            )
-          : DefaultText(movie.title),
+      child: MovieImageWidget(
+        movie: movie,
+        size: AppStrings.imageSizes.posterLarge,
+      ),
     );
   }
 }

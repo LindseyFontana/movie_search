@@ -1,6 +1,8 @@
+import 'package:equatable/equatable.dart';
+
 enum ErrorType { api, connection, unknown }
 
-class Failure implements Exception {
+class Failure extends Equatable implements Exception {
   final StackTrace? stackTrace;
   final String? message;
   final int? statusCode;
@@ -15,6 +17,9 @@ class Failure implements Exception {
 
   @override
   String toString() => "Error message: $message, \n stackTrace: $stackTrace";
+
+  @override
+  List<Object?> get props => [message, statusCode, type];
 }
 
 class HttpError extends Failure {

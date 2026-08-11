@@ -1,12 +1,9 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:movie_search/core/constants/app_strings.dart';
 import 'package:movie_search/core/constants/app_sizes.dart';
-import 'package:movie_search/di/dependency_injection.dart';
 import 'package:movie_search/domain/entities/movie.dart';
-import 'package:movie_search/presentation/extensions/movie_extension.dart';
 import 'package:movie_search/presentation/screens/widgets/back_button_widget.dart';
-import 'package:movie_search/presentation/screens/widgets/default_text.dart';
+import 'package:movie_search/presentation/screens/widgets/movie_image_widget.dart';
 
 class MovieDetailsScreen extends StatelessWidget {
   final Movie movie;
@@ -25,7 +22,8 @@ class MovieDetailsScreen extends StatelessWidget {
           children: [
             Stack(
               children: [
-                _buildMovieImage(
+                MovieImageWidget(
+                  movie: movie,
                   size: AppStrings.imageSizes.backDrop,
                   loaderHeight: mediaQuery.height / 4,
                   loaderWidth: mediaQuery.width,
@@ -57,7 +55,8 @@ class MovieDetailsScreen extends StatelessWidget {
 
                       Flexible(
                         flex: 1,
-                        child: _buildMovieImage(
+                        child: MovieImageWidget(
+                          movie: movie,
                           loaderHeight: 150,
                           loaderWidth: 100,
                           size: AppStrings.imageSizes.posterSmall,
@@ -75,29 +74,5 @@ class MovieDetailsScreen extends StatelessWidget {
         ),
       ),
     );
-  }
-
-  Widget _buildMovieImage({
-    required String size,
-    String? path,
-    required double loaderHeight,
-    required double loaderWidth,
-  }) {
-    final url = movie.getImageUrl(size: size, path: path);
-
-    return url != null && url.isNotEmpty
-        ? CachedNetworkImage(
-            imageUrl: url,
-            cacheManager: CustomCacheManager.instance,
-            placeholder: (context, url) => Container(
-              height: loaderHeight,
-              width: loaderWidth,
-              decoration: const BoxDecoration(
-                color: Color.fromARGB(255, 59, 58, 58),
-              ),
-            ),
-            errorWidget: (context, url, error) => Icon(Icons.error),
-          )
-        : DefaultText(movie.title, height: loaderHeight, width: loaderWidth);
   }
 }
