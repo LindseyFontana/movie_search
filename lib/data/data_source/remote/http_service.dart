@@ -6,18 +6,19 @@ class HttpService {
 
   final Dio _dio;
 
-  HttpService()
-    : _dio = Dio(
-        BaseOptions(
-          connectTimeout: const Duration(seconds: 15),
-          receiveTimeout: const Duration(seconds: 15),
-          sendTimeout: const Duration(seconds: 15),
-          headers: {
-            'accept': 'application/json',
-            'Authorization': 'Bearer $_token',
-          },
-        ),
-      );
+  HttpService({Dio? dio})
+    : _dio = dio ??
+          Dio(
+            BaseOptions(
+              connectTimeout: const Duration(seconds: 15),
+              receiveTimeout: const Duration(seconds: 15),
+              sendTimeout: const Duration(seconds: 15),
+              headers: {
+                'accept': 'application/json',
+                'Authorization': 'Bearer $_token',
+              },
+            ),
+          );
 
   Future<Response<dynamic>> request({
     required String path,
