@@ -48,7 +48,7 @@ lib/
 
 ```bash
 # 1. Clone the repository
-git clone <your-repo-url>
+git clone git@github.com:LindseyFontana/movie_search.git
 cd movie_search
 
 # 2. Install dependencies
