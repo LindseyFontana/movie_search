@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:mocktail/mocktail.dart';
+import 'package:movie_search/data/data_source/local/movie_local_data_source.dart';
 import 'package:movie_search/data/data_source/remote/http_service.dart';
 import 'package:movie_search/data/data_source/remote/movie_data_source.dart';
 import 'package:movie_search/domain/usecases/get_trending_movies_use_case.dart';
@@ -8,6 +9,8 @@ import 'package:movie_search/domain/usecases/search_movies_use_case.dart';
 import 'package:movie_search/presentation/screens/movies_search/bloc/movies_search_bloc.dart';
 
 class MockMovieDataSource extends Mock implements MovieDataSource {}
+
+class MockMovieLocalDataSource extends Mock implements MovieLocalDataSource {}
 
 class MockHttpService extends Mock implements HttpService {}
 

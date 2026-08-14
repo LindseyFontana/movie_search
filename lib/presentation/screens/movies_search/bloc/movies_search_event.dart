@@ -24,3 +24,9 @@ final class LoadMoreTrendingMoviesEvent extends MoviesEvent {
 
   LoadMoreTrendingMoviesEvent([this.trendingMovies]);
 }
+
+final class TrendingMoviesRefreshedEvent extends MoviesEvent {
+  final PaginatedMovies fresh;
+
+  TrendingMoviesRefreshedEvent(this.fresh);
+}

@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:bloc_concurrency/bloc_concurrency.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -16,10 +18,30 @@ class MoviesSearchBloc extends Bloc<MoviesEvent, MoviesSearchState> {
 
   static const _firstPage = 1;
 
+  late final StreamSubscription<PaginatedMovies> _trendingUpdatesSubscription;
+
   MoviesSearchBloc(this.getTrendingMovies, this.searchMovies)
     : super(InitialState()) {
+    _trendingUpdatesSubscription = getTrendingMovies.trendingUpdates.listen(
+      (fresh) => add(TrendingMoviesRefreshedEvent(fresh)),
+    );
+
+    on<TrendingMoviesRefreshedEvent>((event, emit) {
+      final isOnFirstTrendingPage =
+          state.paginatedMovies?.page == 1 &&
+          (state.query == null || state.query!.isEmpty);
+
+      if (isOnFirstTrendingPage) {
+        emit(SuccessState(paginatedMovies: event.fresh));
+      }
+    });
+
     on<GetTrendingMoviesEvent>((event, emit) async {
-      emit(LoadingState());
+      final isShowingTrending =
+          state.paginatedMovies != null &&
+          (state.query == null || state.query!.isEmpty);
+
+      if (!isShowingTrending) emit(LoadingState());
 
       final result = await getTrendingMovies.call(_firstPage);
 
@@ -115,5 +137,11 @@ class MoviesSearchBloc extends Bloc<MoviesEvent, MoviesSearchState> {
 
   int _getNextPage(PaginatedMovies? currentPage) {
     return currentPage != null ? currentPage.page + 1 : _firstPage;
+  }
+
+  @override
+  Future<void> close() async {
+    await _trendingUpdatesSubscription.cancel();
+    await super.close();
   }
 }

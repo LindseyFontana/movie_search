@@ -18,7 +18,7 @@ class MovieDataSourceImpl implements MovieDataSource {
   @override
   Future<PaginatedMovies> getTrendingMovies(int pageToSearch) async {
     final response = await httpService.request(
-      path: "$_baseURL/trending/movie/week",
+      path: "$_baseURL/trending/movie/day",
       queryParameters: {..._defaultParameters, "page": pageToSearch},
     );
 
