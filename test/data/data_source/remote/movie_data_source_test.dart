@@ -48,7 +48,7 @@ void main() {
 
       verify(
         () => httpService.request(
-          path: 'https://api.themoviedb.org/3/trending/movie/week',
+          path: 'https://api.themoviedb.org/3/trending/movie/day',
           queryParameters: queryParameters,
           options: any(named: 'options'),
         ),

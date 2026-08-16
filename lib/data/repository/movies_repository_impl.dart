@@ -39,7 +39,7 @@ class MoviesRepositoryImpl implements MoviesRepository {
 
       _local.put(fresh);
     } catch (_) {
-      // stale cache is kept; revalidation fails silently
+      //It silently fails when trying to update trending movies, and keeps the user's data out of date.
     }
   }
 

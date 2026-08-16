@@ -10,6 +10,7 @@ import 'package:movie_search/presentation/screens/movies_search/bloc/movies_sear
 import 'package:movie_search/presentation/screens/movies_search/movies_search_screen.dart';
 
 void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
   await setupLocator();
   runApp(const MainApp());
 }

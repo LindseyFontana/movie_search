@@ -36,7 +36,7 @@ void main() {
       final result = await repository.getTrendingMovies(page);
 
       verify(() => dataSource.getTrendingMovies(page)).called(1);
-      verify(() => localDataSource.put(page, paginatedMovies)).called(1);
+      verify(() => localDataSource.put(paginatedMovies)).called(1);
 
       expect(result, paginatedMovies);
     });
@@ -63,7 +63,7 @@ void main() {
       await Future<void>.delayed(Duration.zero);
 
       verify(() => dataSource.getTrendingMovies(page)).called(1);
-      verify(() => localDataSource.put(page, paginatedMovies)).called(1);
+      verify(() => localDataSource.put(paginatedMovies)).called(1);
 
       expect(result, paginatedMovies);
     });

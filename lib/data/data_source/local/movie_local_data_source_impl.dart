@@ -5,10 +5,9 @@ import 'package:movie_search/data/data_source/local/trending_movies_cache.dart';
 import 'package:movie_search/domain/entities/paginated_movies.dart';
 
 class MovieLocalDataSourceImpl implements MovieLocalDataSource {
-  MovieLocalDataSourceImpl({TrendingMoviesCache? cache})
-    : _cache = cache ?? TrendingMoviesCache();
+  MovieLocalDataSourceImpl({required this.cache});
 
-  final TrendingMoviesCache _cache;
+  final TrendingMoviesCache cache;
 
   final StreamController<PaginatedMovies> _updatesController =
       StreamController<PaginatedMovies>.broadcast();
@@ -17,14 +16,14 @@ class MovieLocalDataSourceImpl implements MovieLocalDataSource {
   Stream<PaginatedMovies> get updates => _updatesController.stream;
 
   @override
-  PaginatedMovies? get(int page) => _cache.get(page);
+  PaginatedMovies? get(int page) => cache.get(page);
 
   @override
-  bool isFresh(int page) => _cache.isFresh(page);
+  bool isFresh(int page) => cache.isFresh(page);
 
   @override
   void put(PaginatedMovies paginatedMovies) {
-    _cache.put(paginatedMovies);
+    cache.put(paginatedMovies);
 
     if (_updatesController.hasListener) {
       _updatesController.add(paginatedMovies);

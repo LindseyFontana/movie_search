@@ -1,27 +1,58 @@
+import 'dart:convert';
+
 import 'package:movie_search/domain/entities/paginated_movies.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class TrendingMoviesCache {
-  TrendingMoviesCache({this.ttl = _defaultTtl});
+  TrendingMoviesCache(this.storage, {this.ttl = _defaultTtl});
 
-  static const _defaultTtl = Duration(hours: 2);
+  static const _defaultTtl = Duration(hours: 4);
+  static const key = 'trending-movies';
+
+  final SharedPreferences storage;
 
   final Duration ttl;
 
-  final Map<int, _CacheEntry> _entries = {};
+  Map<String, dynamic>? _readCache() {
+    final cachedValues = storage.getString(key);
 
-  PaginatedMovies? get(int page) => _entries[page]?.paginatedMovies;
+    return cachedValues != null ? jsonDecode(cachedValues) : null;
+  }
+
+  PaginatedMovies? get(int page) {
+    final cachedEntries = _readCache();
+
+    if (cachedEntries == null) return null;
+
+    final rawEntry = cachedEntries[page.toString()];
+
+    return rawEntry != null
+        ? _CacheEntry.fromJson(rawEntry).paginatedMovies
+        : null;
+  }
 
   bool isFresh(int page) {
-    final entry = _entries[page];
+    final cachedEntries = _readCache();
 
-    return entry != null && DateTime.now().difference(entry.fetchedAt) < ttl;
+    if (cachedEntries == null) return false;
+
+    final rawEntry = cachedEntries[page.toString()];
+    if (rawEntry == null) return false;
+
+    final entry = _CacheEntry.fromJson(rawEntry);
+
+    return DateTime.now().difference(entry.fetchedAt) < ttl;
   }
 
   void put(PaginatedMovies paginatedMovies) {
-    _entries[paginatedMovies.page] = _CacheEntry(
+    final cachedEntries = _readCache() ?? <String, dynamic>{};
+
+    cachedEntries[paginatedMovies.page.toString()] = _CacheEntry(
       paginatedMovies: paginatedMovies,
       fetchedAt: DateTime.now(),
-    );
+    ).toJson;
+
+    storage.setString(key, jsonEncode(cachedEntries));
   }
 }
 
@@ -30,4 +61,16 @@ class _CacheEntry {
 
   final PaginatedMovies paginatedMovies;
   final DateTime fetchedAt;
+
+  factory _CacheEntry.fromJson(Map<String, dynamic> json) => _CacheEntry(
+    fetchedAt: DateTime.parse(json["fetchedAt"] as String),
+    paginatedMovies: PaginatedMovies.fromJson(
+      json["paginatedMovies"] as Map<String, dynamic>,
+    ),
+  );
+
+  Map<String, dynamic> get toJson => {
+    "fetchedAt": fetchedAt.toIso8601String(),
+    "paginatedMovies": PaginatedMovies.toJson(paginatedMovies),
+  };
 }
