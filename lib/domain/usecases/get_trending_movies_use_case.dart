@@ -4,7 +4,12 @@ import 'package:movie_search/domain/usecases/use_case.dart';
 
 class GetTrendingMoviesUseCase extends UseCase<PaginatedMovies, int> {
   GetTrendingMoviesUseCase(MoviesRepository repository)
-    : super(
+    : _repository = repository,
+      super(
         request: (pageToSearch) => repository.getTrendingMovies(pageToSearch),
       );
+
+  final MoviesRepository _repository;
+
+  Stream<PaginatedMovies> get trendingUpdates => _repository.trendingUpdates;
 }

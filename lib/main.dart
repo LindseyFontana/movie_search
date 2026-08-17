@@ -9,8 +9,9 @@ import 'package:movie_search/presentation/screens/movie_details/movie_details_sc
 import 'package:movie_search/presentation/screens/movies_search/bloc/movies_search_bloc.dart';
 import 'package:movie_search/presentation/screens/movies_search/movies_search_screen.dart';
 
-void main() {
-  setupLocator();
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await setupLocator();
   runApp(const MainApp());
 }
 

@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:bloc_test/bloc_test.dart';
 import 'package:either_dart/either.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -53,9 +55,20 @@ void main() {
 
   const searchNextPageParams = SearchParams(query: query, pageToSearch: 2);
 
+  const freshMovies = PaginatedMovies(
+    page: 1,
+    totalPages: 3,
+    movies: [Movie(id: 4, title: 'Movie Four', overview: 'Overview four')],
+  );
+
   setUp(() {
     getTrendingMoviesUseCase = MockGetTrendingMoviesUseCase();
     searchMoviesUseCase = MockSearchMoviesUseCase();
+
+    when(
+      () => getTrendingMoviesUseCase.trendingUpdates,
+    ).thenAnswer((_) => Stream<PaginatedMovies>.empty());
+
     bloc = MoviesSearchBloc(getTrendingMoviesUseCase, searchMoviesUseCase);
   });
 
@@ -86,6 +99,35 @@ void main() {
       build: () => bloc,
       act: (bloc) => bloc.add(GetTrendingMoviesEvent()),
       expect: () => [const LoadingState(), const ErrorState(apiError)],
+    );
+  });
+
+  group('TrendingMoviesRefreshedEvent', () {
+    blocTest<MoviesSearchBloc, MoviesSearchState>(
+      'emits SuccessState with fresh movies when on first trending page',
+      seed: () => const SuccessState(paginatedMovies: firstPageMovies),
+      build: () => bloc,
+      act: (bloc) => bloc.add(TrendingMoviesRefreshedEvent(freshMovies)),
+      expect: () => [const SuccessState(paginatedMovies: freshMovies)],
+    );
+
+    blocTest<MoviesSearchBloc, MoviesSearchState>(
+      'ignores refresh when on a page after the first trending page',
+      seed: () => const SuccessState(paginatedMovies: mergedMovies),
+      build: () => bloc,
+      act: (bloc) => bloc.add(TrendingMoviesRefreshedEvent(freshMovies)),
+      expect: () => [],
+    );
+
+    blocTest<MoviesSearchBloc, MoviesSearchState>(
+      'ignores refresh when a search query is active',
+      seed: () => const SuccessState(
+        paginatedMovies: firstPageMovies,
+        query: query,
+      ),
+      build: () => bloc,
+      act: (bloc) => bloc.add(TrendingMoviesRefreshedEvent(freshMovies)),
+      expect: () => [],
     );
   });
 
@@ -149,6 +191,71 @@ void main() {
       build: () => bloc,
       act: (bloc) => bloc.add(SearchMoviesEvent(query)),
       expect: () => [const LoadingState(), const ErrorState(apiError)],
+    );
+  });
+
+  group('Trending revalidation', () {
+    late StreamController<PaginatedMovies> controller;
+
+    setUp(() {
+      getTrendingMoviesUseCase = MockGetTrendingMoviesUseCase();
+      searchMoviesUseCase = MockSearchMoviesUseCase();
+      controller = StreamController<PaginatedMovies>.broadcast();
+
+      when(
+        () => getTrendingMoviesUseCase.trendingUpdates,
+      ).thenAnswer((_) => controller.stream);
+
+      when(() => getTrendingMoviesUseCase.call(1)).thenAnswer(
+        (_) async => const Right<Failure, PaginatedMovies>(firstPageMovies),
+      );
+
+      bloc = MoviesSearchBloc(getTrendingMoviesUseCase, searchMoviesUseCase);
+    });
+
+    tearDown(() async {
+      await controller.close();
+    });
+
+    blocTest<MoviesSearchBloc, MoviesSearchState>(
+      'emits SuccessState with fresh movies when refresh is pushed on first page',
+      build: () => bloc,
+      act: (bloc) async {
+        bloc.add(GetTrendingMoviesEvent());
+        await bloc.stream.firstWhere((state) => state is SuccessState);
+        controller.add(freshMovies);
+      },
+      expect: () => [
+        const LoadingState(),
+        const SuccessState(paginatedMovies: firstPageMovies),
+        const SuccessState(paginatedMovies: freshMovies),
+      ],
+    );
+
+    blocTest<MoviesSearchBloc, MoviesSearchState>(
+      'ignores refresh when more pages have been loaded',
+      setUp: () {
+        when(() => getTrendingMoviesUseCase.call(2)).thenAnswer(
+          (_) async => const Right<Failure, PaginatedMovies>(secondPageMovies),
+        );
+      },
+      build: () => bloc,
+      act: (bloc) async {
+        bloc.add(GetTrendingMoviesEvent());
+        await bloc.stream.firstWhere((state) => state is SuccessState);
+        bloc.add(LoadMoreTrendingMoviesEvent(firstPageMovies));
+        await bloc.stream.firstWhere(
+          (state) => state.paginatedMovies?.page == 2,
+        );
+        controller.add(freshMovies);
+        await Future<void>.delayed(Duration.zero);
+      },
+      expect: () => [
+        const LoadingState(),
+        const SuccessState(paginatedMovies: firstPageMovies),
+        const LoadingMoreMoviesState(paginatedMovies: firstPageMovies),
+        const SuccessState(paginatedMovies: mergedMovies),
+      ],
     );
   });
 

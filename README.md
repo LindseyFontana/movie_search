@@ -60,6 +60,18 @@ flutter run --dart-define=MOVIE_API_KEY=your_tmdb_api_key
 
 > The API key is read at compile time via `String.fromEnvironment('MOVIE_API_KEY')` and is never committed to the repository.
 
+### Running from VS Code
+
+If you run/debug from VS Code (using the configs in `.vscode/launch.json`), the app is launched with `--dart-define-from-file .env.json`, so you need to create a `.env.json` file at the project root with your key:
+
+```json
+{
+  "MOVIE_API_KEY": "your_tmdb_api_key"
+}
+```
+
+> `.env.json` is already ignored by git, so your key stays out of version control. Without this file, launching via VS Code will fail with a file-not-found error.
+
 ### Running tests
 
 ```bash

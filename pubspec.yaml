@@ -18,7 +18,9 @@ dependencies:
   flutter_cache_manager: ^3.4.2
   flutter_svg: ^2.3.0
   get_it: ^9.2.1
+  hydrated_bloc: ^11.0.0
   mocktail: ^1.0.5
+  shared_preferences: ^2.5.5
 
 dev_dependencies:
   bloc_test: ^10.0.0

@@ -1,9 +1,12 @@
+import 'dart:async';
+
 import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:movie_search/core/constants/app_keys.dart';
+import 'package:movie_search/core/constants/app_strings.dart';
 import 'package:movie_search/core/errors.dart';
 import 'package:movie_search/domain/entities/movie.dart';
 import 'package:movie_search/domain/entities/paginated_movies.dart';
@@ -39,7 +42,11 @@ void main() {
     registerFallbackValue(GetTrendingMoviesEvent());
   });
 
-  Future<void> pumpScreen(WidgetTester tester, MoviesSearchState state) async {
+  Future<void> pumpScreen(
+    WidgetTester tester,
+    MoviesSearchState state, {
+    List<NavigatorObserver> navigatorObservers = const [],
+  }) async {
     whenListen(bloc, Stream.fromIterable([state]), initialState: initialState);
 
     when(() => bloc.state).thenReturn(state);
@@ -49,7 +56,16 @@ void main() {
     await tester.pumpWidget(
       BlocProvider<MoviesSearchBloc>(
         create: (_) => bloc,
-        child: const MaterialApp(home: MoviesSearchScreen()),
+        child: MaterialApp(
+          navigatorObservers: navigatorObservers,
+          routes: {
+            AppStrings.routes.movieDetails: (_) =>
+                const Scaffold(body: Text('details')),
+            AppStrings.routes.credits: (_) =>
+                const Scaffold(body: Text('credits')),
+          },
+          home: const MoviesSearchScreen(),
+        ),
       ),
     );
     await tester.pump();
@@ -134,4 +150,124 @@ void main() {
       ).called(2);
     },
   );
+
+  group('LoadMoreTrendingMoviesEvent', () {
+    List<Movie> buildMovies(int count) => List.generate(
+      count,
+      (index) =>
+          Movie(id: index, title: 'Movie $index', overview: 'Overview $index'),
+    );
+
+    testWidgets(
+      'dispatches LoadMoreTrendingMoviesEvent when scrolled to the bottom',
+      (tester) async {
+        await pumpScreen(
+          tester,
+          SuccessState(
+            paginatedMovies: PaginatedMovies(
+              page: 1,
+              totalPages: 3,
+              movies: buildMovies(30),
+            ),
+          ),
+        );
+
+        await tester.drag(
+          find.byKey(AppKeys.movieGrid),
+          const Offset(0, -5000),
+        );
+        await tester.pump();
+
+        verify(
+          () => bloc.add(any(that: isA<LoadMoreTrendingMoviesEvent>())),
+        ).called(greaterThan(0));
+      },
+    );
+
+    testWidgets(
+      'does not dispatch LoadMoreTrendingMoviesEvent when on last page',
+      (tester) async {
+        await pumpScreen(
+          tester,
+          SuccessState(
+            paginatedMovies: PaginatedMovies(
+              page: 3,
+              totalPages: 3,
+              movies: buildMovies(30),
+            ),
+          ),
+        );
+
+        await tester.drag(
+          find.byKey(AppKeys.movieGrid),
+          const Offset(0, -5000),
+        );
+        await tester.pump();
+
+        verifyNever(
+          () => bloc.add(any(that: isA<LoadMoreTrendingMoviesEvent>())),
+        );
+      },
+    );
+  });
+
+  group('SearchMoreMoviesEvent', () {
+    List<Movie> buildMovies(int count) => List.generate(
+      count,
+      (index) =>
+          Movie(id: index, title: 'Movie $index', overview: 'Overview $index'),
+    );
+
+    testWidgets(
+      'dispatches SearchMoreMoviesEvent when scrolled to the bottom with active query',
+      (tester) async {
+        const query = 'matrix';
+
+        await pumpScreen(
+          tester,
+          SuccessState(
+            paginatedMovies: PaginatedMovies(
+              page: 1,
+              totalPages: 3,
+              movies: buildMovies(30),
+            ),
+            query: query,
+          ),
+        );
+
+        await tester.drag(
+          find.byKey(AppKeys.movieGrid),
+          const Offset(0, -5000),
+        );
+        await tester.pump();
+
+        verify(
+          () => bloc.add(any(that: isA<SearchMoreMoviesEvent>())),
+        ).called(greaterThan(0));
+      },
+    );
+
+    testWidgets('does not dispatch SearchMoreMoviesEvent when on last page', (
+      tester,
+    ) async {
+      const query = 'matrix';
+
+      await pumpScreen(
+        tester,
+        SuccessState(
+          paginatedMovies: PaginatedMovies(
+            page: 3,
+            totalPages: 3,
+            movies: buildMovies(30),
+          ),
+          query: query,
+        ),
+      );
+
+      await tester.drag(find.byKey(AppKeys.movieGrid), const Offset(0, -5000));
+      await tester.pump();
+
+      verifyNever(() => bloc.add(any(that: isA<SearchMoreMoviesEvent>())));
+    });
+  });
 }
