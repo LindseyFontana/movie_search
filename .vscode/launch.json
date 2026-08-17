@@ -5,9 +5,11 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "movie_search",
+            "name": "movie_search (debug)",
             "request": "launch",
             "type": "dart",
+            "program": "lib/main.dart",
+            "flutterMode": "debug",
             "toolArgs": [
                 "--dart-define-from-file",
                 ".env.json"
@@ -17,13 +19,21 @@
             "name": "movie_search (profile mode)",
             "request": "launch",
             "type": "dart",
-            "flutterMode": "profile"
+            "flutterMode": "profile",
+            "toolArgs": [
+                "--dart-define-from-file",
+                ".env.json"
+            ]
         },
         {
             "name": "movie_search (release mode)",
             "request": "launch",
             "type": "dart",
-            "flutterMode": "release"
+            "flutterMode": "release",
+            "toolArgs": [
+                "--dart-define-from-file",
+                ".env.json"
+            ]
         }
     ]
 }
