@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -132,6 +134,96 @@ void main() {
       verify(
         () => bloc.add(any(that: isA<GetTrendingMoviesEvent>())),
       ).called(2);
+    },
+  );
+
+  testWidgets(
+    'pulling down the grid re-dispatches trending fetch',
+    (tester) async {
+      final controller = StreamController<MoviesSearchState>.broadcast();
+
+      whenListen(bloc, controller.stream, initialState: initialState);
+
+      when(
+        () => bloc.state,
+      ).thenReturn(const SuccessState(paginatedMovies: trendingMovies));
+
+      when(() => bloc.close()).thenAnswer((_) async {});
+
+      await tester.pumpWidget(
+        BlocProvider<MoviesSearchBloc>(
+          create: (_) => bloc,
+          child: const MaterialApp(home: MoviesSearchScreen()),
+        ),
+      );
+      await tester.pump();
+
+      await tester.fling(
+        find.byKey(AppKeys.movieGrid),
+        const Offset(0, 300),
+        1000,
+      );
+      await tester.pump();
+      await tester.pump(const Duration(seconds: 1));
+
+      controller.add(const SuccessState(paginatedMovies: trendingMovies));
+
+      await tester.pump();
+      await tester.pump(const Duration(seconds: 1));
+
+      verify(
+        () => bloc.add(any(that: isA<GetTrendingMoviesEvent>())),
+      ).called(2);
+
+      await controller.close();
+    },
+  );
+
+  testWidgets(
+    'pulling down the grid re-dispatches search when query is active',
+    (tester) async {
+      const query = 'matrix';
+
+      final controller = StreamController<MoviesSearchState>.broadcast();
+
+      whenListen(bloc, controller.stream, initialState: initialState);
+
+      when(
+        () => bloc.state,
+      ).thenReturn(
+        const SuccessState(paginatedMovies: trendingMovies, query: query),
+      );
+
+      when(() => bloc.close()).thenAnswer((_) async {});
+
+      await tester.pumpWidget(
+        BlocProvider<MoviesSearchBloc>(
+          create: (_) => bloc,
+          child: const MaterialApp(home: MoviesSearchScreen()),
+        ),
+      );
+      await tester.pump();
+
+      await tester.fling(
+        find.byKey(AppKeys.movieGrid),
+        const Offset(0, 300),
+        1000,
+      );
+      await tester.pump();
+      await tester.pump(const Duration(seconds: 1));
+
+      controller.add(
+        const SuccessState(paginatedMovies: trendingMovies, query: query),
+      );
+
+      await tester.pump();
+      await tester.pump(const Duration(seconds: 1));
+
+      verify(
+        () => bloc.add(any(that: isA<SearchMoviesEvent>())),
+      ).called(1);
+
+      await controller.close();
     },
   );
 }

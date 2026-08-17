@@ -1,7 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
-import 'package:movie_search/data/data_source/remote/movie_data_source_impl.dart';
+import 'package:movie_search/data/data_source/remote/movie_remote_data_source_impl.dart';
 
 import '../../../mocks.dart';
 
@@ -13,7 +13,7 @@ Response<dynamic> buildResponse(Map<String, dynamic> data) => Response<dynamic>(
 
 void main() {
   late MockHttpService httpService;
-  late MovieDataSourceImpl dataSource;
+  late MovieRemoteDataSourceImpl dataSource;
 
   const page = 5;
   const totalPage = 10;
@@ -25,7 +25,7 @@ void main() {
 
   setUp(() {
     httpService = MockHttpService();
-    dataSource = MovieDataSourceImpl(httpService);
+    dataSource = MovieRemoteDataSourceImpl(httpService);
   });
 
   void stubRequest(Response<dynamic> response) {

@@ -1,14 +1,14 @@
 import 'dart:async';
 
 import 'package:movie_search/data/data_source/local/movie_local_data_source.dart';
-import 'package:movie_search/data/data_source/remote/movie_data_source.dart';
+import 'package:movie_search/data/data_source/remote/movie_remote_data_source.dart';
 import 'package:movie_search/domain/entities/paginated_movies.dart';
 import 'package:movie_search/domain/repository/movies_repository.dart';
 
 class MoviesRepositoryImpl implements MoviesRepository {
   const MoviesRepositoryImpl(this._remote, this._local);
 
-  final MovieDataSource _remote;
+  final MovieRemoteDataSource _remote;
   final MovieLocalDataSource _local;
 
   @override

@@ -102,6 +102,35 @@ void main() {
     );
   });
 
+  group('TrendingMoviesRefreshedEvent', () {
+    blocTest<MoviesSearchBloc, MoviesSearchState>(
+      'emits SuccessState with fresh movies when on first trending page',
+      seed: () => const SuccessState(paginatedMovies: firstPageMovies),
+      build: () => bloc,
+      act: (bloc) => bloc.add(TrendingMoviesRefreshedEvent(freshMovies)),
+      expect: () => [const SuccessState(paginatedMovies: freshMovies)],
+    );
+
+    blocTest<MoviesSearchBloc, MoviesSearchState>(
+      'ignores refresh when on a page after the first trending page',
+      seed: () => const SuccessState(paginatedMovies: mergedMovies),
+      build: () => bloc,
+      act: (bloc) => bloc.add(TrendingMoviesRefreshedEvent(freshMovies)),
+      expect: () => [],
+    );
+
+    blocTest<MoviesSearchBloc, MoviesSearchState>(
+      'ignores refresh when a search query is active',
+      seed: () => const SuccessState(
+        paginatedMovies: firstPageMovies,
+        query: query,
+      ),
+      build: () => bloc,
+      act: (bloc) => bloc.add(TrendingMoviesRefreshedEvent(freshMovies)),
+      expect: () => [],
+    );
+  });
+
   group('LoadMoreTrendingMoviesEvent', () {
     blocTest<MoviesSearchBloc, MoviesSearchState>(
       'emits [LoadingMoreMoviesState, SuccessState] when next page is loaded',

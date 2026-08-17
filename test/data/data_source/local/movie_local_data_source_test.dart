@@ -20,13 +20,12 @@ void main() {
 
     cache = TrendingMoviesCache(
       sharedPreferences,
-      ttl: const Duration(milliseconds: 50),
+      timeToLive: const Duration(milliseconds: 50),
     );
   });
 
   group('MovieLocalDataSourceImpl', () {
-
-    test('returns null and is not fresh when nothing is cached', () async {
+    test('returns right values when nothing is cached', () async {
       final dataSource = MovieLocalDataSourceImpl(cache: cache);
 
       expect(dataSource.get(1), isNull);
@@ -34,7 +33,7 @@ void main() {
     });
 
     test(
-      'returns cached data and considers it fresh while within TTL',
+      'returns cached data and considers it fresh before timeToLive',
       () async {
         final dataSource = MovieLocalDataSourceImpl(cache: cache);
 
@@ -45,24 +44,29 @@ void main() {
       },
     );
 
-    test('keeps stale data but stops considering it fresh after TTL', () async {
-      final dataSource = MovieLocalDataSourceImpl(cache: cache);
+    test(
+      'keeps outdated data but stops considering it fresh after timeToLive',
+      () async {
+        final dataSource = MovieLocalDataSourceImpl(cache: cache);
 
-      dataSource.put(paginatedMovies);
-      expect(dataSource.isFresh(1), isTrue);
+        dataSource.put(paginatedMovies);
+        expect(dataSource.isFresh(1), isTrue);
 
-      await Future<void>.delayed(const Duration(milliseconds: 100));
+        await Future<void>.delayed(const Duration(milliseconds: 100));
 
-      expect(dataSource.isFresh(1), isFalse);
-      expect(dataSource.get(1), paginatedMovies);
-    });
+        expect(dataSource.isFresh(1), isFalse);
+        expect(dataSource.get(1), paginatedMovies);
+      },
+    );
 
     test('emits on updates stream when putting data', () async {
       final dataSource = MovieLocalDataSourceImpl(cache: cache);
 
       final updates = <PaginatedMovies>[];
 
-      final subscription = dataSource.updates.listen(updates.add);
+      final subscription = dataSource.updates.listen(
+        (paginatedMovies) => updates.add(paginatedMovies),
+      );
 
       dataSource.put(paginatedMovies);
       await Future<void>.delayed(Duration.zero);

@@ -23,7 +23,7 @@ class MoviesSearchBloc extends Bloc<MoviesEvent, MoviesSearchState> {
   MoviesSearchBloc(this.getTrendingMovies, this.searchMovies)
     : super(InitialState()) {
     _trendingUpdatesSubscription = getTrendingMovies.trendingUpdates.listen(
-      (fresh) => add(TrendingMoviesRefreshedEvent(fresh)),
+      (paginatedMovies) => add(TrendingMoviesRefreshedEvent(paginatedMovies)),
     );
 
     on<TrendingMoviesRefreshedEvent>((event, emit) {
@@ -32,7 +32,7 @@ class MoviesSearchBloc extends Bloc<MoviesEvent, MoviesSearchState> {
           (state.query == null || state.query!.isEmpty);
 
       if (isOnFirstTrendingPage) {
-        emit(SuccessState(paginatedMovies: event.fresh));
+        emit(SuccessState(paginatedMovies: event.paginatedMovies));
       }
     });
 

@@ -7,7 +7,7 @@ import 'package:movie_search/domain/entities/paginated_movies.dart';
 import '../../mocks.dart';
 
 void main() {
-  late MockMovieDataSource dataSource;
+  late MockMovieRemoteDataSource dataSource;
   late MockMovieLocalDataSource localDataSource;
   late MoviesRepositoryImpl repository;
 
@@ -21,7 +21,7 @@ void main() {
   );
 
   setUp(() {
-    dataSource = MockMovieDataSource();
+    dataSource = MockMovieRemoteDataSource();
     localDataSource = MockMovieLocalDataSource();
     repository = MoviesRepositoryImpl(dataSource, localDataSource);
   });

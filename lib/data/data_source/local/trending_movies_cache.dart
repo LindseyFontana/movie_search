@@ -4,14 +4,16 @@ import 'package:movie_search/domain/entities/paginated_movies.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class TrendingMoviesCache {
-  TrendingMoviesCache(this.storage, {this.ttl = _defaultTtl});
+  TrendingMoviesCache(
+    this.storage, {
+    this.timeToLive = const Duration(hours: 8),
+  });
 
-  static const _defaultTtl = Duration(hours: 4);
   static const key = 'trending-movies';
 
   final SharedPreferences storage;
 
-  final Duration ttl;
+  final Duration timeToLive;
 
   Map<String, dynamic>? _readCache() {
     final cachedValues = storage.getString(key);
@@ -41,7 +43,7 @@ class TrendingMoviesCache {
 
     final entry = _CacheEntry.fromJson(rawEntry);
 
-    return DateTime.now().difference(entry.fetchedAt) < ttl;
+    return DateTime.now().difference(entry.fetchedAt) < timeToLive;
   }
 
   void put(PaginatedMovies paginatedMovies) {

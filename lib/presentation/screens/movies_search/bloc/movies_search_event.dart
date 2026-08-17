@@ -26,7 +26,7 @@ final class LoadMoreTrendingMoviesEvent extends MoviesEvent {
 }
 
 final class TrendingMoviesRefreshedEvent extends MoviesEvent {
-  final PaginatedMovies fresh;
+  final PaginatedMovies paginatedMovies;
 
-  TrendingMoviesRefreshedEvent(this.fresh);
+  TrendingMoviesRefreshedEvent(this.paginatedMovies);
 }

@@ -4,12 +4,12 @@ import 'package:mocktail/mocktail.dart';
 import 'package:movie_search/data/data_source/local/movie_local_data_source.dart';
 import 'package:movie_search/data/data_source/local/trending_movies_cache.dart';
 import 'package:movie_search/data/data_source/remote/http_service.dart';
-import 'package:movie_search/data/data_source/remote/movie_data_source.dart';
+import 'package:movie_search/data/data_source/remote/movie_remote_data_source.dart';
 import 'package:movie_search/domain/usecases/get_trending_movies_use_case.dart';
 import 'package:movie_search/domain/usecases/search_movies_use_case.dart';
 import 'package:movie_search/presentation/screens/movies_search/bloc/movies_search_bloc.dart';
 
-class MockMovieDataSource extends Mock implements MovieDataSource {}
+class MockMovieRemoteDataSource extends Mock implements MovieRemoteDataSource {}
 
 class MockTrendingMoviesCache extends Mock implements TrendingMoviesCache {}
 

@@ -1,12 +1,12 @@
 import 'package:movie_search/data/data_source/remote/http_service.dart';
-import 'package:movie_search/data/data_source/remote/movie_data_source.dart';
+import 'package:movie_search/data/data_source/remote/movie_remote_data_source.dart';
 import 'package:movie_search/data/models/paginated_movies_response_model.dart';
 import 'package:movie_search/domain/entities/paginated_movies.dart';
 
-class MovieDataSourceImpl implements MovieDataSource {
+class MovieRemoteDataSourceImpl implements MovieRemoteDataSource {
   final HttpService httpService;
 
-  const MovieDataSourceImpl(this.httpService);
+  const MovieRemoteDataSourceImpl(this.httpService);
 
   static const _baseURL = "https://api.themoviedb.org/3";
 
