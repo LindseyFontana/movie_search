@@ -4,11 +4,8 @@ A Flutter app for searching movies using the [TMDB (The Movie Database) API](htt
 
 ## Screenshots
 
-<!-- Add screenshots here, e.g.:
-| Home | Search | Details |
-|------|--------|---------|
-| <img src="screenshots/home.png" width="200"> | <img src="screenshots/search.png" width="200"> | <img src="screenshots/details.png" width="200"> |
--->
+<img src="screenshots/search_trending_movies.png" width="200">  <img src="screenshots/movies_search_by_input.png" width="200">  <img src="screenshots/movie_details.png" width="200"> 
+
 
 ## Technical Highlights
 
@@ -95,7 +92,3 @@ flutter analyze
 ## Credits
 
 This product uses the TMDB API but is not endorsed or certified by TMDB.
-
-## License
-
-This project is licensed under the [MIT License](LICENSE).
