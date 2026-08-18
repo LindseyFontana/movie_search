@@ -1,16 +1,23 @@
 # Movie Search
 
-A Flutter app for searching movies using the [TMDB (The Movie Database) API](https://www.themoviedb.org/). Browse the trending movies of the week, search by title, and see the details of any movie (UI in Portuguese).
+A Flutter app for searching movies using the [TMDB (The Movie Database) API](https://www.themoviedb.org/). Browse the trending movies of the day, search by title, and see the details of any movie (UI in Portuguese).
 
-## Features
+## Screenshots
 
-- Trending movies of the week with endless scrolling / infinite pagination
-- Search movies by title
-- Movie details screen (backdrop, poster, overview)
-- Error handling with a retry button
-- Caching Trending Movies to optimize requests.
-- Cached images (posters and backdrops) for performance
-- Credits screen with TMDB attribution
+<!-- Add screenshots here, e.g.:
+| Home | Search | Details |
+|------|--------|---------|
+| <img src="screenshots/home.png" width="200"> | <img src="screenshots/search.png" width="200"> | <img src="screenshots/details.png" width="200"> |
+-->
+
+## Technical Highlights
+
+- **Clean Architecture**: separation between domain, data and presentation layers.
+- **State Management**: BLoC with event concurrency for pagination.
+- **Pagination**: incremental loading of trending and search results.
+- **Caching**: trending movies are cached locally per page (8h Time To Live) and movie images are cached to reduce unnecessary network requests.
+- **Testing**: unit and widget tests covering core business logic and UI behavior.
+- **Error Handling**: explicit error states with retry support.
 
 ## Tech Stack
 
@@ -88,3 +95,7 @@ flutter analyze
 ## Credits
 
 This product uses the TMDB API but is not endorsed or certified by TMDB.
+
+## License
+
+This project is licensed under the [MIT License](LICENSE).
