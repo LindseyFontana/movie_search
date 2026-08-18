@@ -8,6 +8,7 @@ A Flutter app for searching movies using the [TMDB (The Movie Database) API](htt
 - Search movies by title
 - Movie details screen (backdrop, poster, overview)
 - Error handling with a retry button
+- Caching Trending Movies to optimize requests.
 - Cached images (posters and backdrops) for performance
 - Credits screen with TMDB attribution
 
