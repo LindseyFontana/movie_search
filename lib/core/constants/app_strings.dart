@@ -25,7 +25,7 @@ class _AppErrors {
 class _MovieSearchScreen {
   const _MovieSearchScreen();
 
-  final trendingTitle = "Filmes mais populares da semana:";
+  final trendingTitle = "Filmes populares:";
   final searchTitle = "Filmes pesquisados:";
 
   final labelText = 'Pesquisar';
